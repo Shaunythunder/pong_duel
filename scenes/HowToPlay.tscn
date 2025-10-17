@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2n5fng612153"]
+
+[ext_resource type="Script" uid="uid://dvqdhlddiftvj" path="res://scripts/scenes/how_to_play.gd" id="1_iayqv"]
+
+[node name="HowToPlay" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+script = ExtResource("1_iayqv")
+
+[node name="How to Play" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 560.0
+
+[node name="HTP Text" type="Label" parent="How to Play"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "How to Play!"
+
+[node name="Button Hbox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -180.0
+offset_right = 1280.0
+grow_vertical = 0
+
+[node name="Back to Main Menu" type="Button" parent="Button Hbox"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "Return to Main Menu"
+
+[connection signal="pressed" from="Button Hbox/Back to Main Menu" to="." method="_on_back_to_main_menu_pressed"]
