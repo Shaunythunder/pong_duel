@@ -27,10 +27,7 @@ var scalar_speed: int = 600
 var outside_throttle: float = 1.0
 var bounce_vector: Vector2 = Vector2.ZERO
 
-
 # ========== Methods ==========
-
-
 
 func track_and_match_entity(entity: CharacterBody2D, overall_throttle: float = 1.0) -> void:
 	var entity_pos_y: float = entity.position.y
@@ -78,7 +75,7 @@ func _ready() -> void:
 		bounce_vector = Vector2(-1, 0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _is_ball_visible():
 		if _is_threatened_by_ball():
 			track_and_match_entity(ball, 1.0)

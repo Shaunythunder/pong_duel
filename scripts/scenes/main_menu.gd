@@ -5,8 +5,8 @@ extends Control
 
 # ========== Constants ==========
 
-const DUEL_SCENE_PATH: String = "res://scenes/Duel.tscn"
-const HOW_TO_PLAY_SCENE_PATH: String = "res://scenes/HowToPlay.tscn"
+const DUEL_SCENE_PATH: String = "res://scenes/Game Scenes/Duel.tscn"
+const HOW_TO_PLAY_SCENE_PATH: String = "res://scenes/Game Scenes/HowToPlay.tscn"
 
 # ========== Godot Runtime ==========
 # Called when the node enters the scene tree for the first time.
