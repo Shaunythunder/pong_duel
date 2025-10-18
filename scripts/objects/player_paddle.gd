@@ -16,7 +16,7 @@ const INACTIVE = "inactive"
 @export var move_up_action: String = "move_up"
 
 var bounce_vector: Vector2 = Vector2.ZERO
-var x_pos_home: int = position.x
+var x_pos_home: float = position.x
 
 # ========== Methods ==========
 
@@ -35,7 +35,7 @@ func _ready() -> void:
 	if side == "Right":
 		bounce_vector = Vector2(-1, 0)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	get_player_input()
 	force_x_pos()
 	move_and_slide()

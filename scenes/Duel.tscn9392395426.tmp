@@ -96,7 +96,6 @@ metadata/_edit_use_anchors_ = true
 [node name="Right Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(1275, 360)
 script = ExtResource("3_cbdvg")
-side = "Right"
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena Walls/Right Wall"]
@@ -119,7 +118,6 @@ metadata/_edit_use_anchors_ = true
 [node name="Left Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(5, 360)
 script = ExtResource("3_cbdvg")
-side = "Left"
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena Walls/Left Wall"]
@@ -142,7 +140,7 @@ metadata/_edit_use_anchors_ = true
 [node name="Bottom Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(640, 715)
 script = ExtResource("3_cbdvg")
-side = "Bottom"
+side = "Left"
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena Walls/Bottom Wall"]
@@ -168,10 +166,6 @@ metadata/_edit_lock_ = true
 [node name="Ball" type="CharacterBody2D" parent="Projectiles"]
 position = Vector2(640, 360)
 script = ExtResource("4_lew82")
-wall_jostle = false
-terminate_on_goal = false
-terminate_on_paddle_bounce = true
-turn_red = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Ball"]
 shape = SubResource("CircleShape2D_3f4m3")

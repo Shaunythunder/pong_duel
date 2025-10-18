@@ -55,7 +55,7 @@ grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Player Paddle (Left)" type="CharacterBody2D" parent="Paddles"]
-position = Vector2(100, 360)
+position = Vector2(639, 474)
 script = ExtResource("2_ncucj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Paddles/Player Paddle (Left)"]
@@ -168,10 +168,12 @@ metadata/_edit_lock_ = true
 [node name="Ball" type="CharacterBody2D" parent="Projectiles"]
 position = Vector2(640, 360)
 script = ExtResource("4_lew82")
+max_speed = null
+speed_bounce_multiplier = null
+color = null
+ball_radius = null
+paddle_jostle = false
 wall_jostle = false
-terminate_on_goal = false
-terminate_on_paddle_bounce = true
-turn_red = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Ball"]
 shape = SubResource("CircleShape2D_3f4m3")
