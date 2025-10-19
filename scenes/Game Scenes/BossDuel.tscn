@@ -1,10 +1,12 @@
-[gd_scene load_steps=13 format=3 uid="uid://dn346wc0cdqty"]
+[gd_scene load_steps=15 format=3 uid="uid://d2julg5606c5y"]
 
-[ext_resource type="Script" uid="uid://cj573strn5oig" path="res://scripts/scenes/duel.gd" id="1_qd6cj"]
-[ext_resource type="Script" uid="uid://ckomc78e7m2k6" path="res://scripts/ai/basic_paddle_ai.gd" id="2_0oekc"]
-[ext_resource type="Script" uid="uid://cc25q645pc5ac" path="res://scripts/objects/player_paddle.gd" id="3_ynn1y"]
-[ext_resource type="Script" uid="uid://bwvp8wiwh7nv4" path="res://scripts/objects/arena_walls.gd" id="4_mjhpf"]
-[ext_resource type="Script" uid="uid://cq5uaghc3hig8" path="res://scripts/objects/ball.gd" id="5_ujtgj"]
+[ext_resource type="Script" uid="uid://cj573strn5oig" path="res://scripts/scenes/duel.gd" id="1_p58iu"]
+[ext_resource type="Script" uid="uid://bhp4ojr1cwl7e" path="res://scripts/ai/boss_ai.gd" id="2_p58iu"]
+[ext_resource type="Script" uid="uid://cc25q645pc5ac" path="res://scripts/objects/player_paddle.gd" id="3_f18mi"]
+[ext_resource type="Script" uid="uid://5cpeskccgtov" path="res://scripts/objects/walls/boss_rect.gd" id="3_pun6c"]
+[ext_resource type="Script" uid="uid://bwvp8wiwh7nv4" path="res://scripts/objects/arena_walls.gd" id="4_mf4rw"]
+[ext_resource type="Script" uid="uid://bxb7tmv16a2v3" path="res://scripts/objects/walls/boss_wall.gd" id="5_p58iu"]
+[ext_resource type="Script" uid="uid://cq5uaghc3hig8" path="res://scripts/objects/ball.gd" id="6_oxcfe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7xo5x"]
 size = Vector2(10, 100)
@@ -26,8 +28,8 @@ size = Vector2(1280, 10)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3f4m3"]
 
-[node name="Duel" type="Node2D"]
-script = ExtResource("1_qd6cj")
+[node name="BulletBallDuel" type="Node2D"]
+script = ExtResource("1_p58iu")
 metadata/_edit_lock_ = true
 
 [node name="Paddles" type="Node2D" parent="."]
@@ -35,7 +37,8 @@ metadata/_edit_lock_ = true
 
 [node name="AI Paddle (Right)" type="CharacterBody2D" parent="Paddles"]
 position = Vector2(1180, 360)
-script = ExtResource("2_0oekc")
+collision_layer = 2
+script = ExtResource("2_p58iu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Paddles/AI Paddle (Right)"]
 shape = SubResource("RectangleShape2D_7xo5x")
@@ -52,11 +55,14 @@ offset_right = 5.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("3_pun6c")
 metadata/_edit_use_anchors_ = true
 
 [node name="Player Paddle (Left)" type="CharacterBody2D" parent="Paddles"]
 position = Vector2(100, 360)
-script = ExtResource("3_ynn1y")
+collision_layer = 2
+script = ExtResource("3_f18mi")
+mouse_mode = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Paddles/Player Paddle (Left)"]
 shape = SubResource("RectangleShape2D_hpcmg")
@@ -73,7 +79,7 @@ metadata/_edit_lock_ = true
 
 [node name="Top Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(640, 5)
-script = ExtResource("4_mjhpf")
+script = ExtResource("4_mf4rw")
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena Walls/Top Wall"]
@@ -91,11 +97,12 @@ offset_right = 640.0
 offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_p58iu")
 metadata/_edit_use_anchors_ = true
 
 [node name="Right Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(1275, 360)
-script = ExtResource("4_mjhpf")
+script = ExtResource("4_mf4rw")
 side = "Right"
 metadata/_edit_lock_ = true
 
@@ -114,11 +121,12 @@ offset_right = 5.0
 offset_bottom = 360.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_p58iu")
 metadata/_edit_use_anchors_ = true
 
 [node name="Left Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(5, 360)
-script = ExtResource("4_mjhpf")
+script = ExtResource("4_mf4rw")
 side = "Left"
 metadata/_edit_lock_ = true
 
@@ -137,11 +145,12 @@ offset_right = 5.0
 offset_bottom = 360.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_p58iu")
 metadata/_edit_use_anchors_ = true
 
 [node name="Bottom Wall" type="StaticBody2D" parent="Arena Walls"]
 position = Vector2(640, 715)
-script = ExtResource("4_mjhpf")
+script = ExtResource("4_mf4rw")
 side = "Bottom"
 metadata/_edit_lock_ = true
 
@@ -160,6 +169,7 @@ offset_right = 640.0
 offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_p58iu")
 metadata/_edit_use_anchors_ = true
 
 [node name="Projectiles" type="Node2D" parent="."]
@@ -167,7 +177,9 @@ metadata/_edit_lock_ = true
 
 [node name="Ball" type="CharacterBody2D" parent="Projectiles"]
 position = Vector2(640, 360)
-script = ExtResource("5_ujtgj")
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("6_oxcfe")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Ball"]
 shape = SubResource("CircleShape2D_3f4m3")
@@ -175,3 +187,5 @@ shape = SubResource("CircleShape2D_3f4m3")
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(640, 360)
 metadata/_edit_lock_ = true
+
+[connection signal="change_color" from="Paddles/AI Paddle (Right)" to="Paddles/AI Paddle (Right)/ColorRect" method="_on_ai_paddle_right_change_color"]

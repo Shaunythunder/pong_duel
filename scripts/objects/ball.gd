@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 const JOSTLE_DIVIDER: int = 20
 const DEBUG_RADIANS: float = PI/2
-const BALL_ADJUST: float = 0.4
+const BALL_ADJUST: float = PI
 const PUSH_DISTANCE: int = 7
 
 # ========== Variables ==========
@@ -15,7 +15,6 @@ const PUSH_DISTANCE: int = 7
 
 @export_subgroup("Speed Attributes")
 @export var max_speed: float = 1400.0
-@export var speed_bounce_multiplier: float = 1.04
 
 @export_subgroup("Rendering Attributes")
 @export var default_color: Color = Color.WHITE
@@ -27,6 +26,7 @@ const PUSH_DISTANCE: int = 7
 @export var paddle_jostle: bool = true
 @export var wall_jostle: bool = false
 @export var score_on_goal: bool = true
+@export var color_change_on_speed = true
 @export var is_projectile: bool = false
 @export var terminate_on_goal: bool = false
 @export var terminate_on_paddle_bounce: bool = false
@@ -53,14 +53,17 @@ var color: Color
 
 signal goal_scored() #TODO: side
 signal hit_ai_paddle()
+signal hit_player_paddle()
+signal ball_dangerous()
+signal ball_not_dangerous()
 
 # ========== Methods ==========
 
-func handle_collision(collision_obj: Node) -> void:
+func handle_collision(collision, collision_obj: Node) -> void:
 	var pre_bounce_vector: Vector2
 	var post_bounce_vector: Vector2
 	if collision_obj.type == "wall":
-		pre_bounce_vector = collision_obj.bounce_vector
+		pre_bounce_vector = collision.get_normal()
 		if collision_obj.side == "Top" or collision_obj.side == "Bottom":
 			post_bounce_vector = velocity.bounce(pre_bounce_vector).normalized()
 			_push_away_after_bounce(post_bounce_vector)
@@ -79,6 +82,8 @@ func handle_collision(collision_obj: Node) -> void:
 	elif collision_obj.type == "paddle":
 		if collision_obj.side == "Right":
 			hit_ai_paddle.emit()
+		else:
+			hit_player_paddle.emit()
 		if terminate_on_paddle_bounce:
 			BallManager.return_ball_to_pool(self)
 		if paddle_no_clip:
@@ -88,13 +93,14 @@ func handle_collision(collision_obj: Node) -> void:
 					toggle_physics(child)
 					return
 		pre_bounce_vector = collision_obj.bounce_vector
-		pre_bounce_vector = _determine_paddle_bounce(collision_obj)
+		pre_bounce_vector = collision.get_normal()
 		post_bounce_vector = velocity.bounce(pre_bounce_vector).normalized()
 		_push_away_after_bounce(post_bounce_vector)
 		
 		increase_speed_after_bounce()
+		var hit_side: bool = _did_paddle_hit_side(collision_obj)
 		velocity = post_bounce_vector
-		if paddle_jostle:
+		if paddle_jostle and hit_side:
 			jostle_rad_paddle_hit()
 		enforce_min_speed()
 		_resume_speed()
@@ -144,7 +150,7 @@ func enforce_min_speed() -> void:
 		_calc_velocity()
 		
 func increase_speed_after_bounce() -> void:
-	speed = speed * speed_bounce_multiplier
+	speed = speed * GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER
 	_calc_velocity()
 
 func _push_away_after_bounce(bounce_vector: Vector2) -> void:
@@ -166,8 +172,7 @@ func _set_temp_speed(new_speed: float) -> void:
 	previous_speed = speed
 	speed = new_speed
 
-func _determine_paddle_bounce(collision_obj) -> Vector2:
-	var bounce_vector: Vector2 = collision_obj.bounce_vector
+func _did_paddle_hit_side(collision_obj) -> bool:
 	var collision_point: Vector2 = collision_obj.to_local(position)
 	var shape: Shape2D = null
 	for child_node in collision_obj.get_children():
@@ -181,14 +186,12 @@ func _determine_paddle_bounce(collision_obj) -> Vector2:
 		var tolerance: float = .98
 		if abs(collision_point.x) > half_width * tolerance:
 			# Hit side of paddle
-			var x_sign: int = sign(collision_point.x)
-			bounce_vector = Vector2(x_sign, 0)
+			return true
 			
 		elif abs(collision_point.y) > half_height * tolerance:
 			# Hit top or bottom of paddle
-			var y_sign: int = sign( -collision_point.y)
-			bounce_vector = Vector2(0, y_sign)
-	return bounce_vector
+			return false
+	return false
 	
 func change_color(new_color: Color = default_color):
 	color = new_color
@@ -213,6 +216,13 @@ func _is_out_of_bounds() -> bool:
 		return true
 	if ball_y_pos < 0 or ball_y_pos > screen_height:
 		return true
+	return false
+
+func _is_ball_dangerous() -> bool:
+	if speed >= max_speed:
+		ball_dangerous.emit()
+		return true
+	ball_not_dangerous.emit()
 	return false
 
 func _ball_reset() -> void:
@@ -253,6 +263,9 @@ func _physics_process(delta: float) -> void:
 	if color != default_color and not attribute_changed:
 			change_color()
 			attribute_changed = true
+	if color_change_on_speed and speed > max_speed:
+		change_color(Color.ORANGE)
+		attribute_changed = true
 	if attribute_changed:
 		queue_redraw()
 			
@@ -260,7 +273,8 @@ func _physics_process(delta: float) -> void:
 	var collision = move_and_collide(delta_velocity)
 	if collision:
 		var collision_obj = collision.get_collider()
-		handle_collision(collision_obj)
+		handle_collision(collision, collision_obj)
+	_is_ball_dangerous()
 		
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, ball_radius, color)

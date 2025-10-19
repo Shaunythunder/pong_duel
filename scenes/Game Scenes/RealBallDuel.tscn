@@ -59,6 +59,7 @@ metadata/_edit_use_anchors_ = true
 position = Vector2(100, 360)
 collision_layer = 2
 script = ExtResource("3_yv06n")
+mouse_mode = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Paddles/Player Paddle (Left)"]
 shape = SubResource("RectangleShape2D_hpcmg")

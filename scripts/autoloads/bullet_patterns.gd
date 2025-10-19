@@ -26,7 +26,7 @@ func create_burst_pattern(ball_type:String, ball_spawn_position: Vector2, number
 			current_rotation -= increment
 	attack_ended.emit()
 			
-func create_straight_line_rapid_fire(ball_type:String, shooter, rate_of_fire: float, number_of_projectiles: int = 5, clearance: int = 15, main_ball = null):
+func create_straight_line_rapid_fire(ball_type: String, shooter, rate_of_fire: float, number_of_projectiles: int = 5, clearance: int = 15, main_ball = null):
 	if main_ball:
 		main_ball.process_mode = Node.PROCESS_MODE_DISABLED
 		main_ball.position = Vector2(999999,999999)

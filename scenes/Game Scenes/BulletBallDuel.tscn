@@ -186,5 +186,3 @@ shape = SubResource("CircleShape2D_3f4m3")
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(640, 360)
 metadata/_edit_lock_ = true
-
-[connection signal="hit_ai_paddle" from="Projectiles/Ball" to="Paddles/AI Paddle (Right)" method="_on_ball_hit_ai_paddle"]

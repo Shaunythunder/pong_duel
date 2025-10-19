@@ -22,9 +22,12 @@ const SPECIAL_ATTACK_THRESHOLD: float = 12.0
 @export_enum("Left", "Right") var side: String = "Right"
 
 # ---------- Variables ----------
+var ball_dangerous: float = false
+var ball_dangerous_throttle: float = 1.0
+
 
 var x_pos_home: float = position.x
-var scalar_speed: int = 590
+var scalar_speed: int = 600
 var outside_throttle: float = 1.0
 var bounce_vector: Vector2 = Vector2.ZERO
 var ai_bounce_count: int = 0
@@ -46,7 +49,7 @@ func track_and_match_entity(entity: CharacterBody2D, overall_throttle: float = 1
 		velocity.y = entity.velocity.y
 
 	var _direction = sign(distance_to_entity)
-	velocity.y = _direction * scalar_speed * percent_throttle * overall_throttle
+	velocity.y = _direction * scalar_speed * percent_throttle * overall_throttle * ball_dangerous_throttle
 	
 func oscillate_movement(overall_throttle: float = 1.0) -> void:
 	swap_directions_if_valid()
@@ -94,6 +97,9 @@ func _is_threatened_by_ball() -> bool:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	ball.ball_dangerous.connect(_on_ball_dangerous)
+	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)
+	ball.hit_ai_paddle.connect(_on_ball_hit_ai_paddle)
 	if side == "Left":
 		bounce_vector = Vector2(1, 0)
 	if side == "Right":
@@ -122,3 +128,10 @@ func _on_ball_hit_ai_paddle() -> void:
 	ai_bounce_count += 1
 	_calc_special_attack_status()
 	special_attack_status.emit(special_attack_charge)
+
+func _on_ball_dangerous():
+	ball_dangerous_throttle = GlobalConstants.BALL_DANGEROUS_THROTTLE
+
+func _on_ball_not_dangerous():
+	ball_dangerous_throttle = 1.0
+
