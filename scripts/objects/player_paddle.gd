@@ -5,6 +5,7 @@ extends CharacterBody2D
 const type: String = "paddle"
 const INACTIVE: String = "inactive"
 const PLAYER_BOOST_MODIFIER: float = 1.75
+const PLAYER_SLOW_MODIFIER: float = 0.5
 const PLAYER_DISTANCE_TO_CLEAR: int = 15
 
 # ========== Variables ==========
@@ -39,29 +40,15 @@ func get_player_move_input():
 		position.y = mouse_y_pos
 		return
 	var player_boosting: bool = Input.is_action_pressed("boost")
+	var player_slowing_down: bool = Input.is_action_pressed("slow_down")
 	if player_boosting:
 		boost_factor = PLAYER_BOOST_MODIFIER
+	elif player_slowing_down:
+		boost_factor = PLAYER_SLOW_MODIFIER
 	else: 
 		boost_factor = 1.0
 	var player_input_vector = Input.get_vector(INACTIVE, INACTIVE, move_up_action, move_down_action)
 	velocity = player_input_vector * speed * boost_factor
-	
-func get_player_attack_input():
-	var ball_spawn_pos_x: float = position.x + PLAYER_DISTANCE_TO_CLEAR
-	var ball_spawn_pos_y: float = position.y
-	var ball_spawn_position: Vector2 = Vector2(ball_spawn_pos_x, ball_spawn_pos_y)
-	var player_spawn_fake_ball: bool = Input.is_action_just_pressed("spawn_fake_ball")
-	var player_spawn_bullet_ball: bool = Input.is_action_just_pressed("spawn_bullet_ball")
-	var player_spawn_stealth_ball: bool = Input.is_action_just_pressed("spawn_stealth_ball")
-	if player_spawn_fake_ball:
-		print("SPAWN FAKE BALL")
-		BulletPatterns.create_shot_pattern("Fake Ball", ball_spawn_position, 10, ball)
-	if player_spawn_bullet_ball:
-		print("SPAWN BULLET BALL")
-		BulletPatterns.create_straight_line_rapid_fire("Bullet Ball", self, 50, 100, 15, ball)
-	if player_spawn_stealth_ball:
-		print("SPAWN STEALTH BALL")
-		BallManager.get_ball_from_pool("Stealth Ball", ball_spawn_position, 0)
 
 func force_x_pos():
 	if position.x != x_pos_home:
@@ -76,6 +63,5 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	get_player_move_input()
-	get_player_attack_input()
 	move_and_slide()
 	force_x_pos()

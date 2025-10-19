@@ -2,9 +2,9 @@ extends Node
 
 const BALL_CREATOR_PATH: String = "res://scenes/Back End Scenes/BallCreator.tscn"
 const REAL_BALLS_TARGET_QUANTITY: int = 1
-const FAKE_BALLS_TARGET_QUANTITY: int = 20
-const BULLET_BALLS_TARGET_QUANTITY: int = 100
-const STEALTH_BALLS_TARGET_QUANTITY: int = 20
+const FAKE_BALLS_TARGET_QUANTITY: int = 200
+const BULLET_BALLS_TARGET_QUANTITY: int = 200
+const STEALTH_BALLS_TARGET_QUANTITY: int = 200
 const OFFSCREEN_COORDINATES: Vector2 = Vector2(99999, 99999)
 
 var spawn_target_quantities: Array = [
@@ -19,7 +19,6 @@ var available_balls: Array = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var ball_creator = load(BALL_CREATOR_PATH).instantiate()
-	print(ball_creator)
 	for child_node in ball_creator.get_children():
 		available_spawn_types[child_node.type] = child_node.duplicate()
 	ball_creator.queue_free()
@@ -42,7 +41,6 @@ func get_ball_from_pool(ball_type: String, position: Vector2, radians: float, sp
 	var ball
 	for available_ball in available_balls:
 		if available_ball["type"] == ball_type:
-			print(available_balls.size())
 			ball = available_ball["node"]
 			available_balls.erase(available_ball)
 			break

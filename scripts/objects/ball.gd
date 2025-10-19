@@ -3,10 +3,10 @@ extends CharacterBody2D
 # ========== Constants ==========
 
 
-const JOSTLE_DIVIDER: int = 24
+const JOSTLE_DIVIDER: int = 20
 const DEBUG_RADIANS: float = PI/2
 const BALL_ADJUST: float = 0.4
-const PUSH_DISTANCE: int = 5
+const PUSH_DISTANCE: int = 7
 
 # ========== Variables ==========
 
@@ -15,7 +15,7 @@ const PUSH_DISTANCE: int = 5
 
 @export_subgroup("Speed Attributes")
 @export var max_speed: float = 1400.0
-@export var speed_bounce_multiplier: float = 1.05
+@export var speed_bounce_multiplier: float = 1.04
 
 @export_subgroup("Rendering Attributes")
 @export var default_color: Color = Color.WHITE
@@ -25,7 +25,7 @@ const PUSH_DISTANCE: int = 5
 @export_subgroup("Behavior Toggles")
 @export_enum("Real Ball", "Fake Ball", "Bullet Ball", "Stealth Ball") var type: String = "Real Ball" 
 @export var paddle_jostle: bool = true
-@export var wall_jostle: bool = true
+@export var wall_jostle: bool = false
 @export var score_on_goal: bool = true
 @export var is_projectile: bool = false
 @export var terminate_on_goal: bool = false
@@ -45,13 +45,14 @@ var is_pooled: bool = true
 
 var initial_speed: float = 800.0
 var speed: float = 800.0
+var previous_speed: float = 0
 var ball_radius: int
 var color: Color
 
 # ========== Label ==========
 
 signal goal_scored() #TODO: side
-signal hit_player_paddle()
+signal hit_ai_paddle()
 
 # ========== Methods ==========
 
@@ -63,7 +64,7 @@ func handle_collision(collision_obj: Node) -> void:
 		if collision_obj.side == "Top" or collision_obj.side == "Bottom":
 			post_bounce_vector = velocity.bounce(pre_bounce_vector).normalized()
 			_push_away_after_bounce(post_bounce_vector)
-			velocity = post_bounce_vector
+			velocity = post_bounce_vector * speed
 			_nudge_radians()
 			if wall_jostle:
 				jostle_rad_paddle_hit()
@@ -76,8 +77,8 @@ func handle_collision(collision_obj: Node) -> void:
 				BallManager.return_ball_to_pool(self)
 			
 	elif collision_obj.type == "paddle":
-		if collision_obj.side == "Left":
-			hit_player_paddle.emit()
+		if collision_obj.side == "Right":
+			hit_ai_paddle.emit()
 		if terminate_on_paddle_bounce:
 			BallManager.return_ball_to_pool(self)
 		if paddle_no_clip:
@@ -95,7 +96,9 @@ func handle_collision(collision_obj: Node) -> void:
 		velocity = post_bounce_vector
 		if paddle_jostle:
 			jostle_rad_paddle_hit()
-	_calc_velocity()
+		enforce_min_speed()
+		_resume_speed()
+		_calc_velocity()
 		
 # ---------- Radian Methods ----------
 
@@ -150,7 +153,18 @@ func _push_away_after_bounce(bounce_vector: Vector2) -> void:
 func _calc_velocity() -> void:
 	velocity = velocity.normalized() * speed
 	
+func _calc_direction(direction: Vector2) -> void: 
+	velocity= velocity * direction
+	
 # ========== Helpers ==========
+func _resume_speed() -> void:
+	if previous_speed != 0:
+		speed = previous_speed
+		previous_speed = 0
+
+func _set_temp_speed(new_speed: float) -> void:
+	previous_speed = speed
+	speed = new_speed
 
 func _determine_paddle_bounce(collision_obj) -> Vector2:
 	var bounce_vector: Vector2 = collision_obj.bounce_vector
@@ -172,7 +186,7 @@ func _determine_paddle_bounce(collision_obj) -> Vector2:
 			
 		elif abs(collision_point.y) > half_height * tolerance:
 			# Hit top or bottom of paddle
-			var y_sign: int = sign(collision_point.y)
+			var y_sign: int = sign( -collision_point.y)
 			bounce_vector = Vector2(0, y_sign)
 	return bounce_vector
 	

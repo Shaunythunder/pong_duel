@@ -20,7 +20,7 @@ paddle_jostle = false
 wall_jostle = false
 score_on_goal = false
 terminate_on_goal = true
-change_color_near_goal = true
+change_color_near_shooter = true
 paddle_no_clip = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Fake Ball"]

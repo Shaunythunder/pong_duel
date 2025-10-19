@@ -2,8 +2,6 @@ extends Control
 
 # ========== Constants ==========
 
-const MAIN_MENU_PATH: String = "res://scenes/MainMenu.tscn"
-
 # ========== Godot Runtime ==========
 
 # Called when the node enters the scene tree for the first time.
@@ -13,4 +11,4 @@ func _ready() -> void:
 # ========== Button Callbacks ==========
 
 func _on_back_to_main_menu_pressed() -> void:
-	get_tree().change_scene_to_file(MAIN_MENU_PATH)
+	get_tree().change_scene_to_file(GlobalConstants.MAIN_MENU_PATH)
