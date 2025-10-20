@@ -6,11 +6,13 @@
 [ext_resource type="Script" uid="uid://bwvp8wiwh7nv4" path="res://scripts/objects/arena_walls.gd" id="4_ri3vg"]
 [ext_resource type="Script" uid="uid://cq5uaghc3hig8" path="res://scripts/objects/ball.gd" id="5_gvvg7"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_7xo5x"]
-size = Vector2(10, 100)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yqt8r"]
+radius = 5.0
+height = 100.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hpcmg"]
-size = Vector2(10, 100)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j6k03"]
+radius = 5.0
+height = 100.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ncucj"]
 size = Vector2(1280, 10)
@@ -39,7 +41,7 @@ collision_layer = 2
 script = ExtResource("2_u75la")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Paddles/AI Paddle (Right)"]
-shape = SubResource("RectangleShape2D_7xo5x")
+shape = SubResource("CapsuleShape2D_yqt8r")
 
 [node name="ColorRect" type="ColorRect" parent="Paddles/AI Paddle (Right)"]
 anchors_preset = 8
@@ -62,7 +64,7 @@ script = ExtResource("3_yv06n")
 mouse_mode = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Paddles/Player Paddle (Left)"]
-shape = SubResource("RectangleShape2D_hpcmg")
+shape = SubResource("CapsuleShape2D_j6k03")
 
 [node name="ColorRect" type="ColorRect" parent="Paddles/Player Paddle (Left)"]
 offset_left = -5.0

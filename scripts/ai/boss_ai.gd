@@ -7,6 +7,10 @@ const Y_TARGET_ZONE: float = 20.0
 const PASSIVE_THROTTLE: float = 0.3
 const ATTACK_THROTTLE: float = 0.75
 
+const FAKE_ATTACKS_TO_LAUNCH: int = 2
+const BULLET_ATTACKS_TO_LAUNCH: int = 1
+const STEALTH_ATTACKS_TO_LAUNCH: int = 4
+
 const FAKE_ATTACK_THRESHOLD: float = 6.0
 const BULLET_ATTACK_THRESHOLD: float = 12.0
 const STEALTH_ATTACK_THRESHOLD: float = 5.0
@@ -44,6 +48,8 @@ var special_attack_threshold: float = FAKE_ATTACK_THRESHOLD
 
 var acceptable_travel_delay: float = .5
 var can_launch_stealth_ball: bool = false
+
+var attacks_launched: int = 0
 
 var x_pos_home: float = position.x
 var scalar_speed: int = 600
@@ -103,9 +109,11 @@ func launch_special_attack():
 			PI, 
 			GlobalConstants.BOSS_STEALTH_BALL_SPEED
 			)
+		stealth_attack_ended.emit()
 	
+	attacks_launched += 1
 	ai_bounce_count = 0
-	stealth_attack_ended.emit()
+	
 	_determine_attack_style()
 
 # ========== Fake Specific Methods ==========
@@ -175,6 +183,13 @@ func _is_threatened_by_ball() -> bool:
 	
 ## Determine elligible attack style, previous attack style only has 25% of triggering
 func _determine_attack_style() -> void:
+	if current_attack_style == FAKE_STYLE and attacks_launched < FAKE_ATTACKS_TO_LAUNCH:
+		return
+	if current_attack_style == BULLET_STYLE and attacks_launched < BULLET_ATTACKS_TO_LAUNCH:
+		return
+	if current_attack_style == STEALTH_STYLE and attacks_launched < STEALTH_ATTACKS_TO_LAUNCH:
+		return
+	
 	var elligble_styles: Array[String] = []
 	# Array arrangement chances: [75%, 25%]
 	if current_attack_style == FAKE_STYLE and last_attack_style == BULLET_STYLE:
@@ -214,6 +229,7 @@ func _determine_attack_style() -> void:
 	elif current_attack_style == STEALTH_STYLE:
 		special_attack_threshold = STEALTH_ATTACK_THRESHOLD
 
+	attacks_launched = 0
 # ========== Helper ==========
 
 func _change_color() -> void:
@@ -248,8 +264,6 @@ func _process(_delta: float) -> void:
 		oscillate_movement(ATTACK_THROTTLE)
 	move_and_slide()
 	_enforce_home_x()
-	if current_color != attack_style_color:
-		_change_color()
 
 # ========== Callbacks ==========
 
@@ -266,6 +280,8 @@ func _on_ball_hit_player_paddle() -> void:
 		_can_launch_stealth_ball()
 		if can_special_attack() and can_launch_stealth_ball:
 			launch_special_attack()
+	if current_color != attack_style_color:
+		_change_color()
 
 func _on_ball_dangerous():
 	ball_dangerous_throttle = GlobalConstants.BALL_DANGEROUS_THROTTLE
