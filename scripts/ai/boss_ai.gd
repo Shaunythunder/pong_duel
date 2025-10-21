@@ -212,7 +212,6 @@ func _determine_attack_style() -> void:
 	else:
 		selection = 1
 	last_attack_style = current_attack_style
-	print(elligble_styles)
 	current_attack_style = elligble_styles[selection]
 
 	if current_attack_style == FAKE_STYLE:
@@ -233,7 +232,6 @@ func _determine_attack_style() -> void:
 # ========== Helper ==========
 
 func _change_color() -> void:
-	print("Changing COlor")
 	change_color.emit(attack_style_color)
 	current_color = attack_style_color
 
