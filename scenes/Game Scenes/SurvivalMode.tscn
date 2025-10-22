@@ -29,8 +29,9 @@ size = Vector2(1280, 10)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3f4m3"]
 
-[node name="BulletBallDuel" type="Node2D"]
+[node name="SurvivalMode" type="Node2D"]
 script = ExtResource("1_joui7")
+level = "Survival Mode"
 metadata/_edit_lock_ = true
 
 [node name="Paddles" type="Node2D" parent="."]

@@ -1,0 +1,188 @@
+[gd_scene load_steps=5 format=3 uid="uid://ckny7hd3k3tyy"]
+
+[ext_resource type="Script" uid="uid://dvqdhlddiftvj" path="res://scripts/scenes/how_to_play.gd" id="1_fgjm6"]
+[ext_resource type="Script" uid="uid://bhcucqc1ob7et" path="res://scripts/objects/tutorial_ball.gd" id="2_clrpu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sgrwe"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wx5x"]
+size = Vector2(10, 100)
+
+[node name="HowToPlay" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+script = ExtResource("1_fgjm6")
+metadata/_edit_lock_ = true
+metadata/_edit_vertical_guides_ = [1235.0, 100.0, 130.0, 640.0]
+metadata/_edit_horizontal_guides_ = [372.0, 659.0]
+
+[node name="How to Play" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 74.0
+
+[node name="HTP Text" type="Label" parent="How to Play"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Ball Types"
+
+[node name="Projectiles" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Ball" type="CharacterBody2D" parent="Projectiles"]
+position = Vector2(1235, 222)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("2_clrpu")
+color_change_on_speed = false
+change_color_near_shooter = true
+paddle_no_clip = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Ball"]
+shape = SubResource("CircleShape2D_sgrwe")
+
+[node name="Ball2" type="CharacterBody2D" parent="Projectiles"]
+position = Vector2(1235, 372)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("2_clrpu")
+default_color = Color(1, 0, 0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Ball2"]
+shape = SubResource("CircleShape2D_sgrwe")
+
+[node name="Stealth Ball" type="CharacterBody2D" parent="Projectiles"]
+position = Vector2(1235, 522)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("2_clrpu")
+default_color = Color(0, 0, 1, 1)
+stealthy = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Stealth Ball"]
+shape = SubResource("CircleShape2D_sgrwe")
+
+[node name="Real Ball" type="CharacterBody2D" parent="Projectiles"]
+position = Vector2(1235, 87)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("2_clrpu")
+accelerate = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Real Ball"]
+shape = SubResource("CircleShape2D_sgrwe")
+
+[node name="Player Paddle (Left)" type="CharacterBody2D" parent="."]
+position = Vector2(100, 372)
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player Paddle (Left)"]
+shape = SubResource("RectangleShape2D_0wx5x")
+
+[node name="ColorRect" type="ColorRect" parent="Player Paddle (Left)"]
+offset_left = -5.0
+offset_top = -50.0
+offset_right = 5.0
+offset_bottom = 50.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Player Paddle (Left)2" type="CharacterBody2D" parent="."]
+position = Vector2(100, 522)
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player Paddle (Left)2"]
+shape = SubResource("RectangleShape2D_0wx5x")
+
+[node name="ColorRect" type="ColorRect" parent="Player Paddle (Left)2"]
+offset_left = -5.0
+offset_top = -50.0
+offset_right = 5.0
+offset_bottom = 50.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Player Paddle (Left)3" type="CharacterBody2D" parent="."]
+position = Vector2(100, 222)
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player Paddle (Left)3"]
+shape = SubResource("RectangleShape2D_0wx5x")
+
+[node name="ColorRect" type="ColorRect" parent="Player Paddle (Left)3"]
+offset_left = -5.0
+offset_top = -50.0
+offset_right = 5.0
+offset_bottom = 50.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 285.0
+offset_right = 1028.0
+offset_bottom = 308.0
+text = "Fake Ball: These balls are FAKE, and do no damage. They will flash green when they first appear and can be ignored."
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 438.0
+offset_right = 1090.0
+offset_bottom = 461.0
+text = "Bullet Ball: These balls are ANGRY and do damage. They fire in a straight line and must be blocked with your paddle."
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 588.0
+offset_right = 1090.0
+offset_bottom = 611.0
+text = "Stealth Ball: These balls are SNEAKY and do damage. They disappear and must be blocked with your paddle. "
+
+[node name="Label4" type="Label" parent="."]
+layout_mode = 0
+offset_left = 134.0
+offset_top = 127.0
+offset_right = 1032.0
+offset_bottom = 150.0
+text = "Real Ball: The normal game ball, gains speed on each paddle bounce. When fast enough, changes color and slows the enemy down."
+
+[node name="Label5" type="Label" parent="."]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 361.0
+offset_right = 55.0
+offset_bottom = 384.0
+text = "You"
+
+[node name="How to Play2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 939.0
+offset_top = 660.0
+offset_right = 1041.0
+offset_bottom = 691.0
+text = "How To Play"
+
+[node name="Back to Main Menu" type="Button" parent="."]
+layout_mode = 0
+offset_left = 234.0
+offset_top = 659.0
+offset_right = 407.0
+offset_bottom = 690.0
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "Return to Main Menu"
+
+[node name="Pause Balls" type="Button" parent="."]
+layout_mode = 0
+offset_left = 592.0
+offset_top = 659.0
+offset_right = 688.0
+offset_bottom = 690.0
+toggle_mode = true
+text = "Pause Balls"
+
+[connection signal="pressed" from="How to Play2" to="." method="_on_how_to_play_2_pressed"]
+[connection signal="pressed" from="Back to Main Menu" to="." method="_on_back_to_main_menu_pressed"]
+[connection signal="pressed" from="Pause Balls" to="." method="_on_pause_balls_pressed"]

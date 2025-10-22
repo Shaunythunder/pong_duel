@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgp8wn4j7d2vj"]
+
+[ext_resource type="Script" uid="uid://cu8y8ua730a00" path="res://scripts/scenes/pause_menu.gd" id="1_3ed15"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+
+[node name="Pause Menu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 440.0
+offset_top = 235.0
+offset_right = 840.0
+offset_bottom = 485.0
+script = ExtResource("1_3ed15")
+pause_menu = true
+
+[node name="Background" type="ColorRect" parent="Pause Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.18717614, 0.18717614, 0.18717614, 1)
+metadata/_edit_lock_ = true
+
+[node name="Pause Title" type="Label" parent="Pause Menu"]
+layout_mode = 0
+offset_left = 135.0
+offset_top = 52.0
+offset_right = 265.0
+offset_bottom = 75.0
+text = "Paused!"
+horizontal_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="Retry Button" type="Button" parent="Pause Menu"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 155.0
+offset_right = 165.0
+offset_bottom = 186.0
+text = "Retry"
+metadata/_edit_lock_ = true
+
+[node name="Main Menu Button" type="Button" parent="Pause Menu"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 155.0
+offset_right = 357.0
+offset_bottom = 186.0
+text = "Main Menu"
+metadata/_edit_lock_ = true
+
+[connection signal="pressed" from="Pause Menu/Retry Button" to="Pause Menu" method="_on_retry_button_pressed"]
+[connection signal="pressed" from="Pause Menu/Main Menu Button" to="Pause Menu" method="_on_main_menu_button_pressed"]

@@ -8,30 +8,51 @@ anchors_preset = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 script = ExtResource("1_iayqv")
+metadata/_edit_lock_ = true
+metadata/_edit_vertical_guides_ = [1235.0, 100.0, 130.0, 640.0, 320.0, 990.0]
+metadata/_edit_horizontal_guides_ = [690.0, 659.0, 217.0, 360.0]
 
-[node name="How to Play" type="HBoxContainer" parent="."]
+[node name="Bullet Types" type="Button" parent="."]
 layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 560.0
+offset_left = 939.0
+offset_top = 660.0
+offset_right = 1041.0
+offset_bottom = 691.0
+text = "Ball Types"
 
-[node name="HTP Text" type="Label" parent="How to Play"]
-layout_mode = 2
-size_flags_horizontal = 6
-text = "How to Play!"
-
-[node name="Button Hbox" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -180.0
-offset_right = 1280.0
-grow_vertical = 0
-
-[node name="Back to Main Menu" type="Button" parent="Button Hbox"]
-layout_mode = 2
+[node name="Back to Main Menu" type="Button" parent="."]
+layout_mode = 0
+offset_left = 234.0
+offset_top = 659.0
+offset_right = 407.0
+offset_bottom = 690.0
 size_flags_horizontal = 6
 size_flags_vertical = 4
 text = "Return to Main Menu"
 
-[connection signal="pressed" from="Button Hbox/Back to Main Menu" to="." method="_on_back_to_main_menu_pressed"]
+[node name="Welcome" type="Label" parent="."]
+layout_mode = 0
+offset_left = 306.0
+offset_top = 154.0
+offset_right = 974.0
+offset_bottom = 567.0
+text = "Welcome to Bullet Pong! The bullet hell pong game.
+
+The goal is to score on the enemy player until they run out of lives. If you run out of
+lives it's GAME OVER. Use your paddle to block the ball and stop it from going into
+you goal. Watch out for the different types of balls!
+
+You can control your paddle by either the mouse or the keyboard. If using the
+keyboard use the following keys:
+
+W: Move Up
+S: Move Down
+A: Slow Down
+D: Speed Up
+
+Click on the ball types to see the different balls you will encounter. Each one has
+special rules."
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Bullet Types" to="." method="_on_bullet_types_pressed"]
+[connection signal="pressed" from="Back to Main Menu" to="." method="_on_back_to_main_menu_pressed"]

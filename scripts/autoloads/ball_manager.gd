@@ -1,7 +1,7 @@
 extends Node
 
 const BALL_CREATOR_PATH: String = "res://scenes/Back End Scenes/BallCreator.tscn"
-const REAL_BALLS_TARGET_QUANTITY: int = 1
+const REAL_BALLS_TARGET_QUANTITY: int = 50
 const FAKE_BALLS_TARGET_QUANTITY: int = 200
 const BULLET_BALLS_TARGET_QUANTITY: int = 200
 const STEALTH_BALLS_TARGET_QUANTITY: int = 200
@@ -22,6 +22,9 @@ func _ready() -> void:
 	for child_node in ball_creator.get_children():
 		available_spawn_types[child_node.type] = child_node.duplicate()
 	ball_creator.queue_free()
+
+func clear_pools() -> void:
+	available_balls = []
 
 func initialize_ball_pool() -> void:
 	for ball_type in spawn_target_quantities:

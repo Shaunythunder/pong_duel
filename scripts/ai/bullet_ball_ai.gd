@@ -134,4 +134,3 @@ func _on_ball_dangerous():
 
 func _on_ball_not_dangerous():
 	ball_dangerous_throttle = 1.0
-

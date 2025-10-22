@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://vnq6irht7uhj"]
+
+[ext_resource type="Script" uid="uid://cu8y8ua730a00" path="res://scripts/scenes/pause_menu.gd" id="1_3vohp"]
+
+[node name="VictoryMenu" type="CanvasLayer"]
+visible = false
+
+[node name="Victory Menu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 440.0
+offset_top = 235.0
+offset_right = 840.0
+offset_bottom = 485.0
+script = ExtResource("1_3vohp")
+
+[node name="Background" type="ColorRect" parent="Victory Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.18717614, 0.18717614, 0.18717614, 1)
+metadata/_edit_lock_ = true
+
+[node name="Pause Title" type="Label" parent="Victory Menu"]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 51.0
+offset_right = 266.0
+offset_bottom = 74.0
+text = "You Win!"
+horizontal_alignment = 1
+
+[node name="Retry Button" type="Button" parent="Victory Menu"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 155.0
+offset_right = 165.0
+offset_bottom = 186.0
+text = "Retry"
+
+[node name="Main Menu Button" type="Button" parent="Victory Menu"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 155.0
+offset_right = 357.0
+offset_bottom = 186.0
+text = "Main Menu"
+
+[connection signal="pressed" from="Victory Menu/Retry Button" to="Victory Menu" method="_on_retry_button_pressed"]
+[connection signal="pressed" from="Victory Menu/Main Menu Button" to="Victory Menu" method="_on_main_menu_button_pressed"]

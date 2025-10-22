@@ -20,7 +20,7 @@ offset_bottom = 355.0
 [node name="Title_Label" type="Label" parent="TitleHBox"]
 layout_mode = 2
 size_flags_horizontal = 6
-text = "Pong Duel"
+text = "Bullet Pong"
 
 [node name="Button HBox" type="HBoxContainer" parent="."]
 layout_mode = 1

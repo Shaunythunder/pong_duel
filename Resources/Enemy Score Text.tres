@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://hhv2shiio6ir"]
+
+[sub_resource type="FontVariation" id="FontVariation_bkay1"]
+
+[resource]
+default_font = SubResource("FontVariation_bkay1")
+default_font_size = 128

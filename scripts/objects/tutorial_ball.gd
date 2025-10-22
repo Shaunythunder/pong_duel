@@ -1,7 +1,8 @@
 extends CharacterBody2D
 
-# ========== Constants ==========
+@onready var how_to_play = $"../.."
 
+# ========== Constants ==========
 
 const JOSTLE_DIVIDER: int = 20
 const DEBUG_RADIANS: float = PI/2
@@ -15,17 +16,17 @@ const PUSH_DISTANCE: int = 7
 
 @export_subgroup("Speed Attributes")
 @export var max_speed: float = 1400.0
+@export var travel_radians: float = PI
 
 @export_subgroup("Rendering Attributes")
 @export var default_color: Color = Color.WHITE
 @export var goal_change_color: Color = Color.GREEN
 @export_range(4, 16) var default_radius: int = 6
 
+
 @export_subgroup("Behavior Toggles")
 @export_enum("Real Ball", "Fake Ball", "Bullet Ball", "Stealth Ball") var type: String = "Real Ball" 
-@export var paddle_jostle: bool = true
-@export var wall_jostle: bool = false
-@export var score_on_goal: bool = true
+@export var accelerate = false
 @export var color_change_on_speed = true
 @export var is_projectile: bool = false
 @export var terminate_on_goal: bool = false
@@ -37,74 +38,33 @@ const PUSH_DISTANCE: int = 7
 
 # ---------- Internals ----------
 
+var home_coords: Vector2
 var screen: Vector2 
 var screen_width: float 
 var screen_height: float
-var home_coords: Vector2 
 var is_pooled: bool = true
 
-var initial_speed: float = 800.0
-var speed: float = 800.0
+var initial_speed: float = 400.0
+var speed: float = 400.0
 var previous_speed: float = 0
 var ball_radius: int
 var color: Color
+var paused: bool = false
 
 # ========== Label ==========
-
-signal goal_scored(side: String)
-signal hit_ai_paddle()
-signal hit_player_paddle()
-signal ball_dangerous()
-signal ball_not_dangerous()
 
 # ========== Methods ==========
 
 func handle_collision(collision, collision_obj: Node) -> void:
-	var pre_bounce_vector: Vector2
-	var post_bounce_vector: Vector2
-	if collision_obj.type == "wall":
-		pre_bounce_vector = collision.get_normal()
-		if collision_obj.side == "Top" or collision_obj.side == "Bottom":
-			post_bounce_vector = velocity.bounce(pre_bounce_vector).normalized()
-			_push_away_after_bounce(post_bounce_vector)
-			velocity = post_bounce_vector * speed
-			_nudge_radians()
-			if wall_jostle:
-				jostle_rad_paddle_hit()
-		else:
-			if score_on_goal:
-				goal_scored.emit(collision_obj.side)
-			if not terminate_on_goal:
-				_ball_reset()
-			else:
-				BallManager.return_ball_to_pool(self)
-			
-	elif collision_obj.type == "paddle":
-		if collision_obj.side == "Right":
-			hit_ai_paddle.emit()
-		else:
-			hit_player_paddle.emit()
-		if terminate_on_paddle_bounce:
-			BallManager.return_ball_to_pool(self)
-		if paddle_no_clip:
-			var children = self.get_children()
-			for child in children:
-				if child is CollisionShape2D:
-					toggle_physics(child)
-					return
-		pre_bounce_vector = collision_obj.bounce_vector
-		pre_bounce_vector = collision.get_normal()
-		post_bounce_vector = velocity.bounce(pre_bounce_vector).normalized()
-		_push_away_after_bounce(post_bounce_vector)
-		
-		increase_speed_after_bounce()
-		var hit_side: bool = _did_paddle_hit_side(collision_obj)
-		velocity = post_bounce_vector
-		if paddle_jostle and hit_side:
-			jostle_rad_paddle_hit()
-		enforce_min_speed()
-		_resume_speed()
-		_calc_velocity()
+	if terminate_on_paddle_bounce:
+		BallManager.return_ball_to_pool(self)
+	if paddle_no_clip:
+		var children = self.get_children()
+		for child in children:
+			if child is CollisionShape2D:
+				toggle_physics(child)
+				return
+	_ball_reset()
 		
 # ---------- Radian Methods ----------
 
@@ -218,19 +178,10 @@ func _is_out_of_bounds() -> bool:
 		return true
 	return false
 
-func _is_ball_dangerous() -> bool:
-	if speed >= max_speed:
-		ball_dangerous.emit()
-		return true
-	ball_not_dangerous.emit()
-	return false
-
 func _ball_reset() -> void:
 	position = home_coords
 	speed = initial_speed
-	if not is_projectile:
-		var direction: float = _calc_valid_direction()
-		velocity = Vector2.from_angle(direction) * speed
+	velocity = Vector2.from_angle(travel_radians) * speed
 	change_color()
 	change_radius()
 
@@ -238,43 +189,55 @@ func _ball_reset() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	how_to_play.pause_balls.connect(_on_pause_balls)
+	
 	screen = get_viewport_rect().size
 	screen_width = screen.x
 	screen_height = screen.y
 	home_coords = Vector2(screen_width/2, screen_height/2)
+	home_coords = position
 	change_color()
 	_ball_reset()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
-	if _is_out_of_bounds():
-		BallManager.return_ball_to_pool(self)
-	var attribute_changed: bool = false
-	if _can_reveal_true_nature() and change_color_near_shooter and position.x > 930:
-		change_color(goal_change_color)
-		attribute_changed = true
-	elif stealthy:
-		if _can_reveal_true_nature():
-			change_radius()
+	if not paused:
+		if _is_out_of_bounds():
+			_ball_reset()
+		var attribute_changed: bool = false
+		if _can_reveal_true_nature() and change_color_near_shooter and position.x > 930:
+			change_color(goal_change_color)
 			attribute_changed = true
-		else:
-			change_radius(0)
+		elif stealthy:
+			if _can_reveal_true_nature():
+				change_radius()
+				attribute_changed = true
+			else:
+				change_radius(0)
+				attribute_changed = true
+		if color != default_color and not attribute_changed:
+				change_color()
+				attribute_changed = true
+		if color_change_on_speed and speed > max_speed * 2 / 3:
+			change_color(Color.ORANGE)
 			attribute_changed = true
-	if color != default_color and not attribute_changed:
-			change_color()
-			attribute_changed = true
-	if color_change_on_speed and speed > max_speed:
-		change_color(Color.ORANGE)
-		attribute_changed = true
-	if attribute_changed:
-		queue_redraw()
-			
-	var delta_velocity: Vector2 = velocity * delta
-	var collision = move_and_collide(delta_velocity)
-	if collision:
-		var collision_obj = collision.get_collider()
-		handle_collision(collision, collision_obj)
-	_is_ball_dangerous()
+		if attribute_changed:
+			queue_redraw()
+		if accelerate:
+			speed += 8
+			_calc_velocity()
+			if speed > max_speed:
+				speed = initial_speed
+				
+		var delta_velocity: Vector2 = velocity * delta
+		var collision = move_and_collide(delta_velocity)
+		if collision:
+			var collision_obj = collision.get_collider()
+			handle_collision(collision, collision_obj)
 		
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, ball_radius, color)
+	
+func _on_pause_balls():
+	paused = not paused
+	
