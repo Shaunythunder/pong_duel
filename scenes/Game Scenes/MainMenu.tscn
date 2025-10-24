@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://v37ldfhngnay"]
+[gd_scene load_steps=4 format=3 uid="uid://v37ldfhngnay"]
 
 [ext_resource type="Script" uid="uid://frq7y6fpqjik" path="res://scripts/scenes/main_menu.gd" id="1_1pwfy"]
+[ext_resource type="Script" uid="uid://bew6hctsnyw0v" path="res://scenes/Game Scenes/mouse_mode.gd" id="2_53yrw"]
+[ext_resource type="Script" uid="uid://c0gh32tnfvsip" path="res://scenes/Game Scenes/difficulty_mode.gd" id="2_gj3xg"]
 
 [node name="Main Menu" type="Control"]
 layout_mode = 3
@@ -64,9 +66,43 @@ text = "Survival Mode"
 layout_mode = 2
 text = "How to Play"
 
+[node name="Mouse Mode" type="OptionButton" parent="Button HBox/Button VBox"]
+layout_mode = 2
+alignment = 1
+selected = 0
+item_count = 2
+popup/item_0/text = "Controller: Mouse"
+popup/item_0/id = 0
+popup/item_1/text = "Controller: Keyboard"
+popup/item_1/id = 1
+script = ExtResource("2_53yrw")
+
+[node name="Difficulty Mode" type="OptionButton" parent="Button HBox/Button VBox"]
+layout_mode = 2
+alignment = 1
+selected = 1
+item_count = 4
+popup/item_0/text = "Difficulty: Easy"
+popup/item_0/id = 0
+popup/item_1/text = "Difficulty: Medium"
+popup/item_1/id = 1
+popup/item_2/text = "Difficulty: Hard"
+popup/item_2/id = 2
+popup/item_3/text = "Difficulty: INSANE"
+popup/item_3/id = 3
+script = ExtResource("2_gj3xg")
+
 [node name="Quit Button" type="Button" parent="Button HBox/Button VBox"]
 layout_mode = 2
 text = "Quit Game"
+
+[node name="Reset Progress" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1091.0
+offset_top = 648.0
+offset_right = 1214.0
+offset_bottom = 679.0
+text = "Reset Progress"
 
 [connection signal="pressed" from="Button HBox/Button VBox/Pong Ball Duel Button" to="." method="_on_pong_ball_duel_button_pressed"]
 [connection signal="pressed" from="Button HBox/Button VBox/Fake Ball Duel Button" to="." method="_on_fake_ball_duel_button_pressed"]
@@ -75,4 +111,7 @@ text = "Quit Game"
 [connection signal="pressed" from="Button HBox/Button VBox/Boss Duel Button" to="." method="_on_boss_duel_button_pressed"]
 [connection signal="pressed" from="Button HBox/Button VBox/Survival Mode Button" to="." method="_on_survival_mode_button_pressed"]
 [connection signal="pressed" from="Button HBox/Button VBox/How to Play Button" to="." method="_on_how_to_play_button_pressed"]
+[connection signal="item_selected" from="Button HBox/Button VBox/Mouse Mode" to="." method="_on_mouse_mode_item_selected"]
+[connection signal="item_selected" from="Button HBox/Button VBox/Difficulty Mode" to="." method="_on_difficulty_mode_item_selected"]
 [connection signal="pressed" from="Button HBox/Button VBox/Quit Button" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Reset Progress" to="." method="_on_reset_progress_pressed"]

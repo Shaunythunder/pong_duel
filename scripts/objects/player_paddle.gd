@@ -22,11 +22,11 @@ const PLAYER_DISTANCE_TO_CLEAR: int = 15
 @export var spawn_fake_ball: String = "spawn_fake_ball"
 @export var spawn_bullet_ball: String = "spawn_bullet_ball"
 @export var spawn_stealth_ball: String = "spawn_stealth_ball"
-@export var mouse_mode: bool = false
 
 var bounce_vector: Vector2 = Vector2.ZERO
 var x_pos_home: float = position.x
 var boost_factor: float = 1.0
+var mouse_mode: bool
 
 # ========== Methods ==========
 
@@ -56,6 +56,7 @@ func force_x_pos():
 	
 # ========== Godot Runtime ==========
 func _ready() -> void:
+	mouse_mode = GlobalFlagManager.mouse_enabled
 	if side == "Left":
 		bounce_vector = Vector2(1, 0)
 	if side == "Right":

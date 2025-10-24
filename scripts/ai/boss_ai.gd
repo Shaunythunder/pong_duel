@@ -11,9 +11,9 @@ const FAKE_ATTACKS_TO_LAUNCH: int = 2
 const BULLET_ATTACKS_TO_LAUNCH: int = 1
 const STEALTH_ATTACKS_TO_LAUNCH: int = 4
 
-const FAKE_ATTACK_THRESHOLD: float = 6.0
-const BULLET_ATTACK_THRESHOLD: float = 12.0
-const STEALTH_ATTACK_THRESHOLD: float = 5.0
+const FAKE_ATTACK_THRESHOLD: float = 5.0
+const BULLET_ATTACK_THRESHOLD: float = 8.0
+const STEALTH_ATTACK_THRESHOLD: float = 2.0
 
 const FAKE_STYLE: String = "Fake Ball"
 const BULLET_STYLE: String = "Bullet Ball"
@@ -22,6 +22,7 @@ const STEALTH_STYLE: String = "Stealth Ball"
 const FAKE_COLOR: Color = Color.GREEN
 const BULLET_COLOR: Color = Color.RED
 const STEALTH_COLOR: Color = Color.BLUE
+
 
 # ========== Variables ==========
 
@@ -35,6 +36,7 @@ const STEALTH_COLOR: Color = Color.BLUE
 # ---------- Export ----------
 
 @export_enum("Left", "Right") var side: String = "Right"
+@export_enum("Boss", "Survival") var mode: String = "Boss"
 
 # ---------- Variables ----------
 var ball_dangerous: float = false
@@ -49,6 +51,10 @@ var special_attack_threshold: float = FAKE_ATTACK_THRESHOLD
 var acceptable_travel_delay: float = .5
 var can_launch_stealth_ball: bool = false
 
+var fake_health: int = GlobalConstants.FAKE_LIVES
+var bullet_health: int = GlobalConstants.BULLET_LIVES
+var stealth_health: int = GlobalConstants.STEALTH_LIVES
+
 var attacks_launched: int = 0
 
 var x_pos_home: float = position.x
@@ -62,6 +68,7 @@ var special_attack_charge: float = ai_bounce_count / special_attack_threshold
 signal boss_attack_status(special_attack_charge: float, attack_style_color: Color)
 signal stealth_attack_ended()
 signal change_color(attack_style_color: Color)
+signal boss_hit(mode: String)
 
 # ========== Methods ==========
 
@@ -182,38 +189,72 @@ func _is_threatened_by_ball() -> bool:
 	return false
 	
 ## Determine elligible attack style, previous attack style only has 25% of triggering
-func _determine_attack_style() -> void:
-	if current_attack_style == FAKE_STYLE and attacks_launched < FAKE_ATTACKS_TO_LAUNCH:
-		return
-	if current_attack_style == BULLET_STYLE and attacks_launched < BULLET_ATTACKS_TO_LAUNCH:
-		return
-	if current_attack_style == STEALTH_STYLE and attacks_launched < STEALTH_ATTACKS_TO_LAUNCH:
-		return
-	
-	var elligble_styles: Array[String] = []
-	# Array arrangement chances: [75%, 25%]
-	if current_attack_style == FAKE_STYLE and last_attack_style == BULLET_STYLE:
-		elligble_styles = [STEALTH_STYLE, BULLET_STYLE]
-	elif current_attack_style == FAKE_STYLE and last_attack_style == STEALTH_STYLE:
-		elligble_styles = [BULLET_STYLE, STEALTH_STYLE]
-	elif current_attack_style == BULLET_STYLE and last_attack_style == STEALTH_STYLE:
-		elligble_styles = [FAKE_STYLE, STEALTH_STYLE]
-	elif current_attack_style == BULLET_STYLE and last_attack_style == FAKE_STYLE:
-		elligble_styles = [STEALTH_STYLE, FAKE_STYLE]
-	elif current_attack_style == STEALTH_STYLE and last_attack_style == BULLET_STYLE:
-		elligble_styles = [FAKE_STYLE, BULLET_STYLE]
-	elif current_attack_style == STEALTH_STYLE and last_attack_style == FAKE_STYLE:
-		elligble_styles = [BULLET_STYLE, FAKE_STYLE]
-	
-	var d_four_roll = randi_range(1, 4)
-	var selection: int
-	if d_four_roll <= 3:
-		selection = 0
+func _determine_attack_style(dead: bool = false, initial_check: bool = false) -> void:
+	if initial_check:
+		var d_three_roll = randi_range(1, 3)
+		if d_three_roll == 1:
+			current_attack_style = FAKE_STYLE
+		if d_three_roll == 2:
+			current_attack_style = BULLET_STYLE
+		if d_three_roll == 3:
+			current_attack_style = STEALTH_STYLE
 	else:
-		selection = 1
-	last_attack_style = current_attack_style
-	current_attack_style = elligble_styles[selection]
-
+		if not dead:
+			if current_attack_style == FAKE_STYLE and attacks_launched < FAKE_ATTACKS_TO_LAUNCH:
+				if fake_health >= 0:
+					return
+			if current_attack_style == BULLET_STYLE and attacks_launched < BULLET_ATTACKS_TO_LAUNCH:
+				if bullet_health >= 0:
+					return
+			if current_attack_style == STEALTH_STYLE and attacks_launched < STEALTH_ATTACKS_TO_LAUNCH:
+				if stealth_health >= 0:
+					return
+				
+		var available_styles: Array = [FAKE_STYLE, BULLET_STYLE, STEALTH_STYLE]
+		if fake_health <= 0:
+			available_styles.erase(FAKE_STYLE)
+		if bullet_health <= 0:
+			available_styles.erase(BULLET_STYLE)
+		if stealth_health <= 0:
+			available_styles.erase(STEALTH_STYLE)
+		
+		var elligble_styles: Array[String] = []
+		# Array arrangement chances: [75%, 25%]
+		if current_attack_style == FAKE_STYLE and last_attack_style == BULLET_STYLE:
+			elligble_styles = [STEALTH_STYLE, BULLET_STYLE]
+		elif current_attack_style == FAKE_STYLE and last_attack_style == STEALTH_STYLE:
+			elligble_styles = [BULLET_STYLE, STEALTH_STYLE]
+		elif current_attack_style == BULLET_STYLE and last_attack_style == STEALTH_STYLE:
+			elligble_styles = [FAKE_STYLE, STEALTH_STYLE]
+		elif current_attack_style == BULLET_STYLE and last_attack_style == FAKE_STYLE:
+			elligble_styles = [STEALTH_STYLE, FAKE_STYLE]
+		elif current_attack_style == STEALTH_STYLE and last_attack_style == BULLET_STYLE:
+			elligble_styles = [FAKE_STYLE, BULLET_STYLE]
+		elif current_attack_style == STEALTH_STYLE and last_attack_style == FAKE_STYLE:
+			elligble_styles = [BULLET_STYLE, FAKE_STYLE]
+		
+		if FAKE_STYLE in elligble_styles and FAKE_STYLE not in available_styles:
+			elligble_styles.erase(FAKE_STYLE)
+		if BULLET_STYLE in elligble_styles and BULLET_STYLE not in available_styles:
+			elligble_styles.erase(BULLET_STYLE)
+		if STEALTH_STYLE in elligble_styles and STEALTH_STYLE not in available_styles:
+			elligble_styles.erase(STEALTH_STYLE)
+		
+		
+		if elligble_styles.size() > 1:
+			var d_four_roll = randi_range(1, 4)
+			var selection: int
+			if d_four_roll <= 3:
+				selection = 0
+			else:
+				selection = 1
+			last_attack_style = current_attack_style
+			current_attack_style = elligble_styles[selection]
+		elif elligble_styles.size() == 0:
+			return
+		else:
+			current_attack_style = elligble_styles[0]
+		
 	if current_attack_style == FAKE_STYLE:
 		attack_style_color = FAKE_COLOR
 	elif current_attack_style == BULLET_STYLE:
@@ -243,6 +284,8 @@ func _ready() -> void:
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)
 	ball.hit_ai_paddle.connect(_on_ball_hit_ai_paddle)
 	ball.hit_player_paddle.connect(_on_ball_hit_player_paddle)
+	ball.goal_scored.connect(_on_goal_scored)
+	_determine_attack_style(false, true)
 	_change_color()
 	if side == "Left":
 		bounce_vector = Vector2(1, 0)
@@ -280,6 +323,35 @@ func _on_ball_hit_player_paddle() -> void:
 			launch_special_attack()
 	if current_color != attack_style_color:
 		_change_color()
+		
+func _on_goal_scored(score_side: String):
+	if mode == "Boss":
+		if score_side == "Right":
+			if current_attack_style == FAKE_STYLE:
+				fake_health -= 1
+				boss_hit.emit("Fake")
+				if fake_health <= 0:
+					_determine_attack_style(true)
+					_change_color()
+					ai_bounce_count = 0
+					boss_attack_status.emit(0, attack_style_color)
+			elif current_attack_style == BULLET_STYLE:
+				bullet_health -= 1
+				boss_hit.emit("Bullet")
+				if bullet_health <= 0:
+					_determine_attack_style(true)
+					_change_color()
+					ai_bounce_count = 0
+					boss_attack_status.emit(0, attack_style_color)
+			elif current_attack_style == STEALTH_STYLE:
+				stealth_health -= 1
+				boss_hit.emit("Stealth")
+				if stealth_health <= 0:
+					_determine_attack_style(true)
+					_change_color()
+					ai_bounce_count = 0
+					boss_attack_status.emit(0, attack_style_color)
+					
 
 func _on_ball_dangerous():
 	ball_dangerous_throttle = GlobalConstants.BALL_DANGEROUS_THROTTLE

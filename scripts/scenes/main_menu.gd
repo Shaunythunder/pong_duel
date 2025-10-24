@@ -24,8 +24,6 @@ func _ready() -> void:
 	if not GlobalUnlocks.save_data["boss_ball_completed"]:
 		survival_mode_button.visible = false
 	
-	
-	
 func _on_pong_ball_duel_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/Game Scenes/PongBallDuel.tscn")
 
@@ -56,3 +54,30 @@ func _on_how_to_play_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_reset_progress_pressed() -> void:
+	GlobalUnlocks.reset_progress()
+	get_tree().reload_current_scene()
+
+
+func _on_mouse_mode_item_selected(index: int) -> void:
+	if index == 0: 
+		GlobalFlagManager.enable_mouse()
+	else:
+		GlobalFlagManager.disable_mouse()
+
+
+func _on_difficulty_mode_item_selected(index: int) -> void:
+	if index == 0:
+		GlobalFlagManager.difficulty = GlobalConstants.EASY
+		print(GlobalFlagManager.difficulty)
+	elif index == 1:
+		GlobalFlagManager.difficulty = GlobalConstants.MEDIUM
+		print(GlobalFlagManager.difficulty)
+	elif index == 2:
+		GlobalFlagManager.difficulty = GlobalConstants.HARD
+		print(GlobalFlagManager.difficulty)
+	elif index == 3:
+		GlobalFlagManager.difficulty = GlobalConstants.INSANE
+		print(GlobalFlagManager.difficulty)

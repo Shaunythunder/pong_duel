@@ -15,6 +15,17 @@ var save_data: Dictionary = {
 func _ready() -> void:
 	pass # Replace with function body.
 
+func reset_progress():
+	save_data = {
+	"pong_ball_completed": false,
+	"fake_ball_completed": false,
+	"bullet_ball_completed": false,
+	"stealth_ball_completed": false,
+	"boss_ball_completed": false,
+	"survival_highscore": 0,
+ }
+	save_data_to_json()
+
 func save_data_to_json() -> void:
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if not file:

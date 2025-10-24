@@ -13,8 +13,6 @@ const PUSH_DISTANCE: int = 7
 # ---------- Exports ----------
 @export_group("Attributes")
 
-@export_subgroup("Speed Attributes")
-@export var max_speed: float = 1400.0
 
 @export_subgroup("Rendering Attributes")
 @export var default_color: Color = Color.WHITE
@@ -43,11 +41,18 @@ var screen_height: float
 var home_coords: Vector2 
 var is_pooled: bool = true
 
-var initial_speed: float = 800.0
-var speed: float = 800.0
+
 var previous_speed: float = 0
 var ball_radius: int
 var color: Color
+
+
+var difficulty: String
+var max_speed: int
+var initial_speed: float
+var speed: float
+var ball_bounce_multiplier: float
+
 
 # ========== Label ==========
 
@@ -73,6 +78,7 @@ func handle_collision(collision, collision_obj: Node) -> void:
 				jostle_rad_paddle_hit()
 		else:
 			if score_on_goal:
+				print("Goal Scored")
 				goal_scored.emit(collision_obj.side)
 			if not terminate_on_goal:
 				_ball_reset()
@@ -150,7 +156,7 @@ func enforce_min_speed() -> void:
 		_calc_velocity()
 		
 func increase_speed_after_bounce() -> void:
-	speed = speed * GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER
+	speed = speed * ball_bounce_multiplier
 	_calc_velocity()
 
 func _push_away_after_bounce(bounce_vector: Vector2) -> void:
@@ -234,10 +240,33 @@ func _ball_reset() -> void:
 	change_color()
 	change_radius()
 
+func set_difficulty_weights():
+	if difficulty == GlobalConstants.EASY:
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
+		initial_speed = GlobalConstants.BALL_SPEED_EASY
+		speed = GlobalConstants.BALL_SPEED_EASY
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+	elif difficulty == GlobalConstants.MEDIUM:
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
+		initial_speed = GlobalConstants.BALL_SPEED_EASY
+		speed = GlobalConstants.BALL_SPEED_EASY
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+	elif difficulty == GlobalConstants.HARD:
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
+		initial_speed = GlobalConstants.BALL_SPEED_EASY
+		speed = GlobalConstants.BALL_SPEED_EASY
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+	elif difficulty == GlobalConstants.INSANE:
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
+		initial_speed = GlobalConstants.BALL_SPEED_EASY
+		speed = GlobalConstants.BALL_SPEED_EASY
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
 # ========== Godot Runtime ==========
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	difficulty = GlobalFlagManager.difficulty
+	set_difficulty_weights()
 	screen = get_viewport_rect().size
 	screen_width = screen.x
 	screen_height = screen.y

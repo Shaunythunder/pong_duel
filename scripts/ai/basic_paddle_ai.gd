@@ -26,6 +26,7 @@ var x_pos_home: float = position.x
 var scalar_speed: int = 600
 var outside_throttle: float = 1.0
 var bounce_vector: Vector2 = Vector2.ZERO
+var difficulty: String
 
 # ========== Methods ==========
 
@@ -66,9 +67,21 @@ func _is_ball_visible() -> bool:
 func _enforce_home_x() -> void:
 	if position.x != x_pos_home:
 		position.x = x_pos_home
+		
+func set_difficulty_weights():
+	if difficulty == GlobalConstants.EASY:
+		scalar_speed = GlobalConstants.PONG_PADDLE_SPEED_EASY
+	elif difficulty == GlobalConstants.MEDIUM:
+		scalar_speed = GlobalConstants.PONG_PADDLE_SPEED_MEDIUM
+	elif difficulty == GlobalConstants.HARD:
+		scalar_speed = GlobalConstants.PONG_PADDLE_SPEED_HARD
+	elif difficulty == GlobalConstants.INSANE:
+		scalar_speed = GlobalConstants.PONG_PADDLE_SPEED_INSANE
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	difficulty = GlobalFlagManager.difficulty
+	set_difficulty_weights()
 	if side == "Left":
 		bounce_vector = Vector2(1, 0)
 	if side == "Right":

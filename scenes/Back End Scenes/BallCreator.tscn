@@ -32,6 +32,7 @@ script = ExtResource("1_ah5jw")
 default_color = Color(1, 0, 0, 1)
 type = "Bullet Ball"
 paddle_jostle = false
+is_projectile = true
 terminate_on_goal = true
 terminate_on_paddle_bounce = true
 

@@ -24,6 +24,7 @@ GlobalConstants="*res://scripts/autoloads/global_constants.gd"
 GlobalPause="*res://scripts/autoloads/global_pause.gd"
 GlobalUnlocks="*res://scripts/autoloads/global_unlocks.gd"
 ScoreBus="*res://scripts/autoloads/score_bus.gd"
+GlobalFlagManager="*res://scripts/autoloads/global_flag_manager.gd"
 
 [display]
 
