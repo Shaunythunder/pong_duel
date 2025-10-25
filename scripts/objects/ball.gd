@@ -79,7 +79,6 @@ func handle_collision(collision, collision_obj: Node) -> void:
 				jostle_rad_paddle_hit()
 		else:
 			if score_on_goal:
-				print("Goal Scored")
 				goal_scored.emit(collision_obj.side)
 			if not terminate_on_goal:
 				_ball_reset()
@@ -88,7 +87,8 @@ func handle_collision(collision, collision_obj: Node) -> void:
 			
 	elif collision_obj.type == "paddle":
 		if collision_obj.side == "Right":
-			hit_ai_paddle.emit()
+			if _did_paddle_hit_side(collision_obj):
+				hit_ai_paddle.emit()
 		else:
 			hit_player_paddle.emit()
 		if terminate_on_paddle_bounce:
@@ -240,6 +240,7 @@ func _ball_reset() -> void:
 		velocity = Vector2.from_angle(direction) * speed
 	change_color()
 	change_radius()
+	self.reset_physics_interpolation()
 
 func set_difficulty_weights():
 	if difficulty == GlobalConstants.EASY:
@@ -266,7 +267,7 @@ func set_difficulty_weights():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	screen = get_viewport_rect().size
 	screen_width = screen.x

@@ -4,7 +4,8 @@
 [ext_resource type="Theme" uid="uid://2edl2me4vs65" path="res://Resources/Player Score Text.tres" id="2_ntel1"]
 [ext_resource type="Theme" uid="uid://hhv2shiio6ir" path="res://Resources/Enemy Score Text.tres" id="3_t5bit"]
 
-[node name="LivesOverlay" type="Node2D"]
+[node name="LivesOverlay" type="CanvasLayer"]
+layer = 0
 script = ExtResource("1_fr66g")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]

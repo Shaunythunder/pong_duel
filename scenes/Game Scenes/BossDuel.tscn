@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://d2julg5606c5y"]
+[gd_scene load_steps=17 format=3 uid="uid://d2julg5606c5y"]
 
 [ext_resource type="Script" uid="uid://cj573strn5oig" path="res://scripts/scenes/duel.gd" id="1_p58iu"]
 [ext_resource type="Script" uid="uid://bhp4ojr1cwl7e" path="res://scripts/ai/boss_ai.gd" id="2_p58iu"]
 [ext_resource type="Script" uid="uid://cc25q645pc5ac" path="res://scripts/objects/player_paddle.gd" id="3_f18mi"]
 [ext_resource type="Script" uid="uid://5cpeskccgtov" path="res://scripts/objects/walls/boss_rect.gd" id="3_pun6c"]
 [ext_resource type="Script" uid="uid://bwvp8wiwh7nv4" path="res://scripts/objects/arena_walls.gd" id="4_mf4rw"]
+[ext_resource type="Script" uid="uid://nho7h0asjv7g" path="res://scripts/objects/player_rect.gd" id="5_mf4rw"]
 [ext_resource type="Script" uid="uid://bxb7tmv16a2v3" path="res://scripts/objects/walls/boss_wall.gd" id="5_p58iu"]
 [ext_resource type="Script" uid="uid://cq5uaghc3hig8" path="res://scripts/objects/ball.gd" id="6_oxcfe"]
 [ext_resource type="Script" uid="uid://cu8y8ua730a00" path="res://scripts/scenes/pause_menu.gd" id="8_f18mi"]
@@ -73,6 +74,7 @@ offset_left = -5.0
 offset_top = -50.0
 offset_right = 5.0
 offset_bottom = 50.0
+script = ExtResource("5_mf4rw")
 metadata/_edit_use_anchors_ = true
 
 [node name="Arena Walls" type="Node2D" parent="."]

@@ -1,4 +1,4 @@
-extends Node2D
+extends CanvasLayer
 
 @onready var player_score = $"HBoxContainer/Player Score"
 @onready var ai_score = $"HBoxContainer/AI Score"

@@ -4,7 +4,8 @@
 [ext_resource type="Theme" uid="uid://2edl2me4vs65" path="res://Resources/Player Score Text.tres" id="2_8vkre"]
 [ext_resource type="Theme" uid="uid://hhv2shiio6ir" path="res://Resources/Enemy Score Text.tres" id="3_4emft"]
 
-[node name="LivesOverlay" type="Node2D"]
+[node name="BossLivesOverlay" type="CanvasLayer"]
+layer = -1
 script = ExtResource("1_afhg3")
 metadata/_edit_vertical_guides_ = [640.0]
 

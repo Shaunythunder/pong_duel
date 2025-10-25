@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2blnydiwnwbf"]
+
+[ext_resource type="Script" uid="uid://cu8y8ua730a00" path="res://scripts/scenes/pause_menu.gd" id="1_eacbg"]
+[ext_resource type="Script" uid="uid://bnlqy07iu26tu" path="res://scenes/Functional/label.gd" id="2_ghhpj"]
+
+[node name="SurvivalScoreMenu" type="CanvasLayer"]
+visible = false
+metadata/_edit_vertical_guides_ = [641.0]
+
+[node name="Survival Score Menu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 440.0
+offset_top = 235.0
+offset_right = 840.0
+offset_bottom = 485.0
+script = ExtResource("1_eacbg")
+
+[node name="Background" type="ColorRect" parent="Survival Score Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.18717614, 0.18717614, 0.18717614, 1)
+metadata/_edit_lock_ = true
+
+[node name="SurvivalScore Title" type="Label" parent="Survival Score Menu"]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 51.0
+offset_right = 266.0
+offset_bottom = 74.0
+text = "Game Over!"
+horizontal_alignment = 1
+
+[node name="Retry Button" type="Button" parent="Survival Score Menu"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 155.0
+offset_right = 165.0
+offset_bottom = 186.0
+text = "Retry"
+
+[node name="Main Menu Button" type="Button" parent="Survival Score Menu"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 155.0
+offset_right = 357.0
+offset_bottom = 186.0
+text = "Main Menu"
+
+[node name="Label2" type="Label" parent="Survival Score Menu"]
+layout_mode = 0
+offset_left = 166.0
+offset_top = 97.0
+offset_right = 206.0
+offset_bottom = 120.0
+text = "Score: 00"
+script = ExtResource("2_ghhpj")
+
+[connection signal="pressed" from="Survival Score Menu/Retry Button" to="Survival Score Menu" method="_on_retry_button_pressed"]
+[connection signal="pressed" from="Survival Score Menu/Main Menu Button" to="Survival Score Menu" method="_on_main_menu_button_pressed"]

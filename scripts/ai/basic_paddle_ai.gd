@@ -80,7 +80,7 @@ func set_difficulty_weights():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	if side == "Left":
 		bounce_vector = Vector2(1, 0)

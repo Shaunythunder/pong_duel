@@ -11,7 +11,7 @@ const BULLET_ATTACKS_TO_LAUNCH: int = 1
 const STEALTH_ATTACKS_TO_LAUNCH: int = 4
 
 const FAKE_ATTACK_THRESHOLD: float = 4.0
-const BULLET_ATTACK_THRESHOLD: float = 6.0
+const BULLET_ATTACK_THRESHOLD: float = 8.0
 const STEALTH_ATTACK_THRESHOLD: float = 2.0
 
 const FAKE_STYLE: String = "Fake Ball"
@@ -56,7 +56,7 @@ var rapid_fire_amount: int
 
 var acceptable_travel_delay: float
 var can_launch_stealth_ball: bool = false
-var stealth_ball_speed: float
+var stealth_ball_speed: int
 
 var ball_bounce_multiplier: float
 
@@ -351,7 +351,7 @@ func set_difficulty_weights():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	ball.ball_dangerous.connect(_on_ball_dangerous)
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)
@@ -403,9 +403,7 @@ func _on_goal_scored(score_side: String):
 			if current_attack_style == FAKE_STYLE:
 				fake_health -= 1
 				boss_hit.emit("Fake")
-				print("Boss hit")
 				if fake_health <= 0:
-					print("Phase Dead")
 					_determine_attack_style(true)
 					_change_color()
 					ai_bounce_count = 0
@@ -413,19 +411,15 @@ func _on_goal_scored(score_side: String):
 			elif current_attack_style == BULLET_STYLE:
 				bullet_health -= 1
 				boss_hit.emit("Bullet")
-				print("Boss hit")
 				if bullet_health <= 0:
-					print("Phase Dead")
 					_determine_attack_style(true)
 					_change_color()
 					ai_bounce_count = 0
 					boss_attack_status.emit(0, attack_style_color)
 			elif current_attack_style == STEALTH_STYLE:
 				stealth_health -= 1
-				print("Boss hit")
 				boss_hit.emit("Stealth")
 				if stealth_health <= 0:
-					print("Phase Dead")
 					_determine_attack_style(true)
 					_change_color()
 					ai_bounce_count = 0

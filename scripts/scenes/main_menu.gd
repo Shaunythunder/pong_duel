@@ -3,26 +3,35 @@
 
 extends Control
 
+const SAVE_PATH: String = "user://save_data.json"
+const FLAGS_PATH: String = "user://global_flags.json"
+
 @onready var fake_ball_button = $"Button HBox/Button VBox/Fake Ball Duel Button"
 @onready var bullet_ball_button = $"Button HBox/Button VBox/Bullet Duel Button"
 @onready var stealth_ball_button = $"Button HBox/Button VBox/Stealth Duel Button"
 @onready var boss_ball_button = $"Button HBox/Button VBox/Boss Duel Button"
 @onready var survival_mode_button = $"Button HBox/Button VBox/Survival Mode Button"
+@onready var best_survival_score = $"Best Survival Score"
+
+func buttons_visible_by_difficulty(current_difficulty):
+	if not GlobalUnlocks.save_data[current_difficulty]["pong_ball_completed"]:
+		fake_ball_button.visible = false
+	if not GlobalUnlocks.save_data[current_difficulty]["fake_ball_completed"]:
+		bullet_ball_button.visible = false
+	if not GlobalUnlocks.save_data[current_difficulty]["bullet_ball_completed"]:
+		stealth_ball_button.visible = false
+	if not GlobalUnlocks.save_data[current_difficulty]["stealth_ball_completed"]:
+		boss_ball_button.visible = false
+	if not GlobalUnlocks.save_data[current_difficulty]["boss_ball_completed"]:
+		survival_mode_button.visible = false
+		best_survival_score.visible = false
 
 # ========== Godot Runtime ==========
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	if not GlobalUnlocks.save_data["pong_ball_completed"]:
-		fake_ball_button.visible = false
-	if not GlobalUnlocks.save_data["fake_ball_completed"]:
-		bullet_ball_button.visible = false
-	if not GlobalUnlocks.save_data["bullet_ball_completed"]:
-		stealth_ball_button.visible = false
-	if not GlobalUnlocks.save_data["stealth_ball_completed"]:
-		boss_ball_button.visible = false
-	if not GlobalUnlocks.save_data["boss_ball_completed"]:
-		survival_mode_button.visible = false
+	GlobalUnlocks.load_data_from_json()
+	buttons_visible_by_difficulty(GlobalFlagManager.global_flags["difficulty"])
 	
 func _on_pong_ball_duel_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/Game Scenes/PongBallDuel.tscn")
@@ -66,18 +75,21 @@ func _on_mouse_mode_item_selected(index: int) -> void:
 		GlobalFlagManager.enable_mouse()
 	else:
 		GlobalFlagManager.disable_mouse()
+	GlobalFlagManager.save_data_to_json()
 
 
 func _on_difficulty_mode_item_selected(index: int) -> void:
 	if index == 0:
-		GlobalFlagManager.difficulty = GlobalConstants.EASY
-		print(GlobalFlagManager.difficulty)
+		GlobalFlagManager.change_difficulty(GlobalConstants.EASY)
 	elif index == 1:
-		GlobalFlagManager.difficulty = GlobalConstants.MEDIUM
-		print(GlobalFlagManager.difficulty)
+		GlobalFlagManager.change_difficulty(GlobalConstants.MEDIUM)
 	elif index == 2:
-		GlobalFlagManager.difficulty = GlobalConstants.HARD
-		print(GlobalFlagManager.difficulty)
+		GlobalFlagManager.change_difficulty(GlobalConstants.HARD)
 	elif index == 3:
-		GlobalFlagManager.difficulty = GlobalConstants.INSANE
-		print(GlobalFlagManager.difficulty)
+		GlobalFlagManager.change_difficulty(GlobalConstants.INSANE)
+	GlobalFlagManager.save_data_to_json()
+	get_tree().reload_current_scene()
+
+
+func _on_color_picker_button_color_changed(color: Color) -> void:
+	GlobalFlagManager.change_color(color)

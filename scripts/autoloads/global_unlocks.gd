@@ -3,27 +3,79 @@ extends Node
 const SAVE_PATH: String = "user://save_data.json"
 
 var save_data: Dictionary = {
-	"pong_ball_completed": true,
-	"fake_ball_completed": true,
-	"bullet_ball_completed": true,
-	"stealth_ball_completed": true,
-	"boss_ball_completed": true,
-	"survival_highscore": 0,
- }
+		"Easy": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+		"Medium": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+		"Hard": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+		"INSANE": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+ 	}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
 
 func reset_progress():
 	save_data = {
-	"pong_ball_completed": false,
-	"fake_ball_completed": false,
-	"bullet_ball_completed": false,
-	"stealth_ball_completed": false,
-	"boss_ball_completed": false,
-	"survival_highscore": 0,
- }
+		"Easy": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+		"Medium": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+		"Hard": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+		"INSANE": {
+			"pong_ball_completed": false,
+			"fake_ball_completed": false,
+			"bullet_ball_completed": false,
+			"stealth_ball_completed": false,
+			"boss_ball_completed": false,
+			"survival_highscore": 0,
+		},
+	 }
 	save_data_to_json()
 
 func save_data_to_json() -> void:
@@ -39,7 +91,8 @@ func save_data_to_json() -> void:
 func load_data_from_json() -> void:
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.READ)
 	if not file:
-		push_error("Failed to open file at %s for saving" % SAVE_PATH)
+		push_error("Save file not found: %s" % SAVE_PATH)
+		file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	
 	var json_content: String = file.get_as_text()
 	file.close()

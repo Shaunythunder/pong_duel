@@ -6,7 +6,6 @@ func _on_ready():
 	ai_bullet_ball_paddle.change_color(_on_change_color)
 	
 func _on_change_color(new_color: Color) -> void:
-	print("Change Color")
 	color = new_color
 
 

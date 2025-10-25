@@ -20,10 +20,12 @@ var boss_lives_ui_path: String = "res://scenes/Functional/Boss Lives Overlay.tsc
 var pause_menu_path: String = "res://scenes/Functional/PauseMenu.tscn"
 var victory_menu_path: String = "res://scenes/Functional/VictoryMenu.tscn"
 var defeated_menu_path: String = "res://scenes/Functional/DefeatedMenu.tscn"
+var survival_score_menu_path: String = "res://scenes/Functional/Survival Score Menu.tscn"
 var count_down_path: String = "res://scenes/Functional/CountDown.tscn"
 
 var victory_menu
 var defeated_menu
+var survival_score_menu
 var boss_paddle
 var count_down
 var difficulty: String
@@ -51,7 +53,7 @@ func set_difficulty_weights():
 		boss_lives = GlobalConstants.BOSS_LIVES_INSANE
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	BallManager.clear_pools()
 	BallManager.initialize_ball_pool()
@@ -84,6 +86,11 @@ func _ready() -> void:
 	if defeated_menu_scene:
 		defeated_menu = defeated_menu_scene.instantiate()
 		add_child(defeated_menu)
+	
+	var survival_score_menu_scene: PackedScene = load(survival_score_menu_path)
+	if survival_score_menu_scene:
+		survival_score_menu = survival_score_menu_scene.instantiate()
+		add_child(survival_score_menu)
 	
 	if level == "Boss Ball":
 		boss_paddle = $"Paddles/AI Paddle (Right)"
@@ -134,23 +141,27 @@ func _on_boss_hit(mode: String):
 	ScoreBus.boss_hit(mode)
 		
 func _on_game_over(winner: String):
-	if winner == "Player":
+	if level == "Survival Mode":
+		if ScoreBus.get_player_score() > GlobalUnlocks.save_data[GlobalFlagManager.difficulty]["survival_highscore"]:
+			GlobalUnlocks.save_data[GlobalFlagManager.difficulty]["survival_highscore"] = ScoreBus.get_player_score()
+		GlobalUnlocks.save_data_to_json()
+		survival_score_menu.visible = true
+	elif winner == "Player":
 		victory_menu.visible = true
 		if level == "Pong Ball":
-			GlobalUnlocks.save_data["pong_ball_completed"] = true
+			GlobalUnlocks.save_data[difficulty]["pong_ball_completed"] = true
 		if level == "Fake Ball":
-			GlobalUnlocks.save_data["fake_ball_completed"] = true
+			GlobalUnlocks.save_data[difficulty]["fake_ball_completed"] = true
 		if level == "Bullet Ball":
-			GlobalUnlocks.save_data["bullet_ball_completed"] = true
+			GlobalUnlocks.save_data[difficulty]["bullet_ball_completed"] = true
 		if level == "Stealth Ball":
-			GlobalUnlocks.save_data["stealth_ball_completed"] = true
+			GlobalUnlocks.save_data[difficulty]["stealth_ball_completed"] = true
 		if level == "Boss Ball":
-			GlobalUnlocks.save_data["boss_ball_completed"] = true
-		if level == "Survival Mode":
-			GlobalUnlocks.save_data["survival_highscore"] = ScoreBus.get_player_score()
+			GlobalUnlocks.save_data[difficulty]["boss_ball_completed"] = true
+		GlobalUnlocks.save_data_to_json()
 	elif winner == "AI":
 		defeated_menu.visible = true
-	
+		
 	get_tree().paused = true
 	
 func _process(_delta: float) -> void:

@@ -13,13 +13,14 @@ extends OptionButton
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if GlobalFlagManager.difficulty == GlobalConstants.EASY:
+	GlobalFlagManager.load_data_from_json()
+	if GlobalFlagManager.global_flags["difficulty"] == GlobalConstants.EASY:
 		selected = 0
-	elif GlobalFlagManager.difficulty == GlobalConstants.MEDIUM:
+	elif GlobalFlagManager.global_flags["difficulty"] == GlobalConstants.MEDIUM:
 		selected = 1
-	elif GlobalFlagManager.difficulty == GlobalConstants.HARD:
+	elif GlobalFlagManager.global_flags["difficulty"] == GlobalConstants.HARD:
 		selected = 2
-	elif GlobalFlagManager.difficulty == GlobalConstants.INSANE:
+	elif GlobalFlagManager.global_flags["difficulty"] == GlobalConstants.INSANE:
 		selected = 3
 
 

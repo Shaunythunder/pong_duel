@@ -37,7 +37,6 @@ func initialize_boss_lives(
 	update_boss_lives.emit(fake_lives, bullet_lives, stealth_lives)
 	
 func boss_hit(mode: String):
-	print()
 	if mode == "Fake":
 		fake_lives -= 1
 	elif mode == "Bullet":

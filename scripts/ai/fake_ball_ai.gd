@@ -110,7 +110,7 @@ func set_difficulty_weights():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	ball.ball_dangerous.connect(_on_ball_dangerous)
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)

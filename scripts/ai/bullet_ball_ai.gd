@@ -5,7 +5,7 @@ extends CharacterBody2D
 const type: String = "paddle"
 const Y_TARGET_ZONE: float = 20.0
 const PASSIVE_THROTTLE: float = 0.3
-const SPECIAL_ATTACK_THRESHOLD: float = 8.0
+const SPECIAL_ATTACK_THRESHOLD: float = 12.0
 
 # ========== Variables ==========
 
@@ -128,7 +128,7 @@ func set_difficulty_weights():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	ball.ball_dangerous.connect(_on_ball_dangerous)
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)

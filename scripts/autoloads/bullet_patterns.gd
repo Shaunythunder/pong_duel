@@ -9,7 +9,7 @@ var difficulty: String
 signal attack_ended
 
 func update_difficulty():
-	difficulty = GlobalFlagManager.difficulty
+	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	if difficulty == GlobalConstants.EASY:
 		fake_speed = GlobalConstants.BALL_SPEED_EASY
 		bullet_speed = GlobalConstants.BALL_SPEED_EASY
@@ -55,7 +55,6 @@ func create_straight_line_rapid_fire(ball_type: String, shooter, rate_of_fire: f
 		main_ball.position = Vector2(999999,999999)
 	var ball_spawn_position: Vector2
 	for projectile in range(number_of_projectiles): 
-		print(projectile)
 		while get_tree().paused:
 			await get_tree().process_frame
 		if is_instance_valid(shooter):
@@ -72,6 +71,5 @@ func create_straight_line_rapid_fire(ball_type: String, shooter, rate_of_fire: f
 	if main_ball:
 		main_ball.process_mode = Node.PROCESS_MODE_PAUSABLE
 		main_ball.position = ball_spawn_position
-		print(main_ball.position)
 		main_ball.velocity = Vector2.from_angle(DEFAULT_RADIANS) * bullet_speed
 	attack_ended.emit()

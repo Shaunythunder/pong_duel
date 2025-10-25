@@ -56,7 +56,7 @@ func force_x_pos():
 	
 # ========== Godot Runtime ==========
 func _ready() -> void:
-	mouse_mode = GlobalFlagManager.mouse_enabled
+	mouse_mode = GlobalFlagManager.global_flags["mouse_enabled"]
 	if side == "Left":
 		bounce_vector = Vector2(1, 0)
 	if side == "Right":
