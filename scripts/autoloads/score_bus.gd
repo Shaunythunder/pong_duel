@@ -17,6 +17,7 @@ signal update_lives(player_lives: int, ai_lives: int)
 signal update_boss_lives(fake_lives: int, bullet_lives: int, stealth_lives: int)
 
 func initialize_lives(player_lives_amount: int, ai_lives_amount: int):
+	game_has_ended = false
 	player_lives = player_lives_amount
 	ai_lives = ai_lives_amount
 	update_lives.emit(player_lives, ai_lives)
@@ -27,6 +28,7 @@ func initialize_boss_lives(
 	bullet_lives_amount: int,
 	stealth_lives_amount: int,
 	):
+	game_has_ended = false
 	player_lives = player_lives_amount
 	fake_lives = fake_lives_amount
 	bullet_lives = bullet_lives_amount

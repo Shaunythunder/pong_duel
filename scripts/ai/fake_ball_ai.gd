@@ -31,6 +31,9 @@ var outside_throttle: float = 1.0
 var bounce_vector: Vector2 = Vector2.ZERO
 var ai_bounce_count: int = 0
 var special_attack_charge: float = ai_bounce_count / SPECIAL_ATTACK_THRESHOLD
+var difficulty: String
+var ball_dangerous_throttle_default: float
+var fake_ball_amount: int
 
 signal special_attack_status(special_attack_charge: float)
 
@@ -54,7 +57,7 @@ func launch_special_attack():
 	var ball_spawn_pos_x: float = position.x - GlobalConstants.SHOT_CLEARANCE
 	var ball_spawn_pos_y: float = position.y
 	var ball_spawn_position: Vector2 = Vector2(ball_spawn_pos_x, ball_spawn_pos_y)
-	BulletPatterns.create_burst_pattern("Fake Ball", ball_spawn_position, 10, ball)
+	BulletPatterns.create_burst_pattern("Fake Ball", ball_spawn_position, fake_ball_amount, ball)
 	ai_bounce_count = 0
 # ========== Conditionals  ==========
 
@@ -87,8 +90,28 @@ func _is_threatened_by_ball() -> bool:
 		return true
 	return false
 
+func set_difficulty_weights():
+	if difficulty == GlobalConstants.EASY:
+		scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_EASY
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_EASY
+		fake_ball_amount = GlobalConstants.FAKE_BALL_AMOUNT_EASY
+	elif difficulty == GlobalConstants.MEDIUM:
+		scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_MEDIUM
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_MEDIUM
+		fake_ball_amount = GlobalConstants.FAKE_BALL_AMOUNT_MEDIUM
+	elif difficulty == GlobalConstants.HARD:
+		scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_HARD
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_HARD
+		fake_ball_amount = GlobalConstants.FAKE_BALL_AMOUNT_HARD
+	elif difficulty == GlobalConstants.INSANE:
+		scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_INSANE
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_INSANE
+		fake_ball_amount = GlobalConstants.FAKE_BALL_AMOUNT_INSANE
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	difficulty = GlobalFlagManager.difficulty
+	set_difficulty_weights()
 	ball.ball_dangerous.connect(_on_ball_dangerous)
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)
 	ball.hit_ai_paddle.connect(_on_ball_hit_ai_paddle)
@@ -121,7 +144,7 @@ func _on_ball_hit_ai_paddle() -> void:
 	special_attack_status.emit(special_attack_charge)
 
 func _on_ball_dangerous():
-	ball_dangerous_throttle = GlobalConstants.BALL_DANGEROUS_THROTTLE
+	ball_dangerous_throttle = ball_dangerous_throttle_default
 
 func _on_ball_not_dangerous():
 	ball_dangerous_throttle = 1.0

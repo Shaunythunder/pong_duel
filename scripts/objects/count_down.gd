@@ -16,6 +16,8 @@ var timer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	GlobalPause.game_paused = true
+	GlobalPause.count_down_active = true
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	timer = Timer.new()
 	add_child(timer)
@@ -31,4 +33,6 @@ func _on_second_progression() -> void:
 	count_down_time -= 1
 	if count_down_time <= 0:
 		get_tree().paused = false
+		GlobalPause.game_paused = false
+		GlobalPause.count_down_active = false
 		queue_free()

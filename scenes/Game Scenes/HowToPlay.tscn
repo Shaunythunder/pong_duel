@@ -9,8 +9,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 script = ExtResource("1_iayqv")
 metadata/_edit_lock_ = true
-metadata/_edit_vertical_guides_ = [1235.0, 100.0, 130.0, 640.0, 320.0, 990.0]
-metadata/_edit_horizontal_guides_ = [690.0, 659.0, 217.0, 360.0]
+metadata/_edit_horizontal_guides_ = [690.0, 659.0]
 
 [node name="Bullet Types" type="Button" parent="."]
 layout_mode = 0
@@ -42,13 +41,14 @@ The goal is to score on the enemy player until they run out of lives. If you run
 lives it's GAME OVER. Use your paddle to block the ball and stop it from going into
 your goal. Watch out for the different types of balls!
 
-You can control your paddle by either the mouse or the keyboard. If using the
-keyboard use the following keys:
+You can control your paddle by either the mouse or the keyboard.
+Mouse is recommended for higher difficulties!
+If using the keyboard use the following keys:
 
 W: Move Up
 S: Move Down
-A: Slow Down
-D: Speed Up
+A (Hold): Speed Up
+D (Hold): Slow Down
 
 Click on the ball types to see the different balls you will encounter. Each one has
 special rules."

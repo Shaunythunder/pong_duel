@@ -5,14 +5,13 @@ extends CharacterBody2D
 const type: String = "paddle"
 const Y_TARGET_ZONE: float = 20.0
 const PASSIVE_THROTTLE: float = 0.3
-const ATTACK_THROTTLE: float = 0.75
 
 const FAKE_ATTACKS_TO_LAUNCH: int = 2
 const BULLET_ATTACKS_TO_LAUNCH: int = 1
 const STEALTH_ATTACKS_TO_LAUNCH: int = 4
 
-const FAKE_ATTACK_THRESHOLD: float = 5.0
-const BULLET_ATTACK_THRESHOLD: float = 8.0
+const FAKE_ATTACK_THRESHOLD: float = 4.0
+const BULLET_ATTACK_THRESHOLD: float = 6.0
 const STEALTH_ATTACK_THRESHOLD: float = 2.0
 
 const FAKE_STYLE: String = "Fake Ball"
@@ -41,6 +40,7 @@ const STEALTH_COLOR: Color = Color.BLUE
 # ---------- Variables ----------
 var ball_dangerous: float = false
 var ball_dangerous_throttle: float = 1.0
+var ball_dangerous_throttle_default: float
 
 var current_attack_style: String = FAKE_STYLE
 var last_attack_style: String = STEALTH_STYLE
@@ -48,22 +48,36 @@ var current_color: Color = FAKE_COLOR
 var attack_style_color: Color = FAKE_COLOR
 var special_attack_threshold: float = FAKE_ATTACK_THRESHOLD
 
-var acceptable_travel_delay: float = .5
-var can_launch_stealth_ball: bool = false
+var fake_ball_amount: int
 
-var fake_health: int = GlobalConstants.FAKE_LIVES
-var bullet_health: int = GlobalConstants.BULLET_LIVES
-var stealth_health: int = GlobalConstants.STEALTH_LIVES
+var attack_throttle: float
+var rapid_fire_rate: int
+var rapid_fire_amount: int
+
+var acceptable_travel_delay: float
+var can_launch_stealth_ball: bool = false
+var stealth_ball_speed: float
+
+var ball_bounce_multiplier: float
+
+var fake_health: int = GlobalConstants.BOSS_LIVES_MEDIUM
+var bullet_health: int = GlobalConstants.BOSS_LIVES_MEDIUM
+var stealth_health: int = GlobalConstants.BOSS_LIVES_MEDIUM
 
 var attacks_launched: int = 0
 
+var scalar_speed: int
+var fake_scalar_speed: int
+var bullet_scalar_speed: int
+var stealth_scalar_speed: int
+
 var x_pos_home: float = position.x
-var scalar_speed: int = 600
 var outside_throttle: float = 1.0
 var bounce_vector: Vector2 = Vector2.ZERO
 var ai_bounce_count: int = 0
 var direction: int = 1
 var special_attack_charge: float = ai_bounce_count / special_attack_threshold
+var difficulty: String
 
 signal boss_attack_status(special_attack_charge: float, attack_style_color: Color)
 signal stealth_attack_ended()
@@ -95,7 +109,7 @@ func launch_special_attack():
 		BulletPatterns.create_burst_pattern(
 			"Fake Ball", 
 			ball_spawn_position, 
-			GlobalConstants.BOSS_FAKE_BALL_AMOUNT, 
+			fake_ball_amount, 
 			ball,
 			)
 
@@ -103,8 +117,8 @@ func launch_special_attack():
 		BulletPatterns.create_straight_line_rapid_fire(
 			"Bullet Ball", 
 			self, 
-			GlobalConstants.BOSS_RAPID_FIRE_RATE, 
-			GlobalConstants.BOSS_RAPID_FIRE_AMOUNT, 
+			rapid_fire_rate, 
+			rapid_fire_amount, 
 			GlobalConstants.SHOT_CLEARANCE, 
 			ball,
 			)
@@ -114,7 +128,7 @@ func launch_special_attack():
 			"Stealth Ball", 
 			ball_spawn_position, 
 			PI, 
-			GlobalConstants.BOSS_STEALTH_BALL_SPEED
+			stealth_ball_speed
 			)
 		stealth_attack_ended.emit()
 	
@@ -140,8 +154,7 @@ func oscillate_movement(overall_throttle: float = 1.0) -> void:
 # ========== Stealth Specific Methods ==========
 
 func _can_launch_stealth_ball() -> bool:
-	var speed_mulitplier: float = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER
-	var stealth_ball_speed: float = GlobalConstants.STEALTH_BALL_SPEED
+	var speed_mulitplier: float = ball_bounce_multiplier
 	var player_x: float = player.position.x
 	var ai_x: float = position.x
 	var distance_x: float = abs(player_x - ai_x)
@@ -194,10 +207,13 @@ func _determine_attack_style(dead: bool = false, initial_check: bool = false) ->
 		var d_three_roll = randi_range(1, 3)
 		if d_three_roll == 1:
 			current_attack_style = FAKE_STYLE
+			last_attack_style = STEALTH_STYLE
 		if d_three_roll == 2:
 			current_attack_style = BULLET_STYLE
+			last_attack_style = FAKE_STYLE
 		if d_three_roll == 3:
 			current_attack_style = STEALTH_STYLE
+			last_attack_style = BULLET_STYLE
 	else:
 		if not dead:
 			if current_attack_style == FAKE_STYLE and attacks_launched < FAKE_ATTACKS_TO_LAUNCH:
@@ -257,17 +273,16 @@ func _determine_attack_style(dead: bool = false, initial_check: bool = false) ->
 		
 	if current_attack_style == FAKE_STYLE:
 		attack_style_color = FAKE_COLOR
+		special_attack_threshold = FAKE_ATTACK_THRESHOLD
+		scalar_speed = fake_scalar_speed
 	elif current_attack_style == BULLET_STYLE:
 		attack_style_color = BULLET_COLOR
+		special_attack_threshold = BULLET_ATTACK_THRESHOLD
+		scalar_speed = bullet_scalar_speed
 	elif current_attack_style == STEALTH_STYLE:
 		attack_style_color = STEALTH_COLOR
-
-	if current_attack_style == FAKE_STYLE:
-		special_attack_threshold = FAKE_ATTACK_THRESHOLD
-	elif current_attack_style == BULLET_STYLE:
-		special_attack_threshold = BULLET_ATTACK_THRESHOLD
-	elif current_attack_style == STEALTH_STYLE:
 		special_attack_threshold = STEALTH_ATTACK_THRESHOLD
+		scalar_speed = stealth_scalar_speed
 
 	attacks_launched = 0
 # ========== Helper ==========
@@ -277,9 +292,67 @@ func _change_color() -> void:
 	current_color = attack_style_color
 
 # ========== Godot Runtime ==========
+func set_difficulty_weights():
+	if difficulty == GlobalConstants.EASY:
+		fake_scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_EASY
+		bullet_scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_EASY
+		stealth_scalar_speed = GlobalConstants.STEALTH_PADDLE_SPEED_EASY
+		
+		ball_dangerous_throttle_default = GlobalConstants.BOSS_BALL_DANGEROUS_THROTTLE_EASY
+		stealth_ball_speed = GlobalConstants.BOSS_STEALTH_BALL_SPEED_EASY
+		acceptable_travel_delay = GlobalConstants.STEALTH_BALL_ACCEPTABLE_DELAY_EASY
+		attack_throttle = GlobalConstants.BOSS_ATTACK_THROTTLE_EASY
+		rapid_fire_amount = GlobalConstants.BOSS_RAPID_FIRE_AMOUNT_EASY
+		rapid_fire_rate =  GlobalConstants.BOSS_RAPID_FIRE_RATE_EASY
+		fake_ball_amount = GlobalConstants.BOSS_FAKE_BALL_AMOUNT_EASY
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+		
+	elif difficulty == GlobalConstants.MEDIUM:
+		fake_scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_MEDIUM
+		bullet_scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_MEDIUM
+		stealth_scalar_speed = GlobalConstants.STEALTH_PADDLE_SPEED_MEDIUM
+		
+		ball_dangerous_throttle_default = GlobalConstants.BOSS_BALL_DANGEROUS_THROTTLE_MEDIUM
+		stealth_ball_speed = GlobalConstants.BOSS_STEALTH_BALL_SPEED_MEDIUM
+		acceptable_travel_delay = GlobalConstants.STEALTH_BALL_ACCEPTABLE_DELAY_MEDIUM
+		attack_throttle = GlobalConstants.BOSS_ATTACK_THROTTLE_MEDIUM
+		rapid_fire_amount = GlobalConstants.BOSS_RAPID_FIRE_AMOUNT_MEDIUM
+		rapid_fire_rate =  GlobalConstants.BOSS_RAPID_FIRE_RATE_MEDIUM
+		fake_ball_amount = GlobalConstants.BOSS_FAKE_BALL_AMOUNT_MEDIUM
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_MEDIUM
+		
+	elif difficulty == GlobalConstants.HARD:
+		fake_scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_HARD
+		bullet_scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_HARD
+		stealth_scalar_speed = GlobalConstants.STEALTH_PADDLE_SPEED_HARD
+		
+		ball_dangerous_throttle_default = GlobalConstants.BOSS_BALL_DANGEROUS_THROTTLE_HARD
+		stealth_ball_speed = GlobalConstants.BOSS_STEALTH_BALL_SPEED_HARD
+		acceptable_travel_delay = GlobalConstants.STEALTH_BALL_ACCEPTABLE_DELAY_HARD
+		attack_throttle = GlobalConstants.BOSS_ATTACK_THROTTLE_HARD
+		rapid_fire_amount = GlobalConstants.BOSS_RAPID_FIRE_AMOUNT_HARD
+		rapid_fire_rate =  GlobalConstants.BOSS_RAPID_FIRE_RATE_HARD
+		fake_ball_amount = GlobalConstants.BOSS_FAKE_BALL_AMOUNT_HARD
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_HARD
+		
+	elif difficulty == GlobalConstants.INSANE:
+		fake_scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_INSANE
+		bullet_scalar_speed = GlobalConstants.FAKE_PADDLE_SPEED_INSANE
+		stealth_scalar_speed = GlobalConstants.STEALTH_PADDLE_SPEED_INSANE
+		
+		ball_dangerous_throttle_default = GlobalConstants.BOSS_BALL_DANGEROUS_THROTTLE_INSANE
+		stealth_ball_speed = GlobalConstants.BOSS_STEALTH_BALL_SPEED_INSANE
+		acceptable_travel_delay = GlobalConstants.STEALTH_BALL_ACCEPTABLE_DELAY_INSANE
+		attack_throttle = GlobalConstants.BOSS_ATTACK_THROTTLE_INSANE
+		rapid_fire_amount = GlobalConstants.BOSS_RAPID_FIRE_AMOUNT_INSANE
+		rapid_fire_rate =  GlobalConstants.BOSS_RAPID_FIRE_RATE_INSANE
+		fake_ball_amount = GlobalConstants.BOSS_FAKE_BALL_AMOUNT_INSANE
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_INSANE
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	difficulty = GlobalFlagManager.difficulty
+	set_difficulty_weights()
 	ball.ball_dangerous.connect(_on_ball_dangerous)
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)
 	ball.hit_ai_paddle.connect(_on_ball_hit_ai_paddle)
@@ -302,7 +375,7 @@ func _process(_delta: float) -> void:
 		else:
 			track_and_match_entity(ball, PASSIVE_THROTTLE)
 	else:
-		oscillate_movement(ATTACK_THROTTLE)
+		oscillate_movement(attack_throttle)
 	move_and_slide()
 	_enforce_home_x()
 
@@ -330,7 +403,9 @@ func _on_goal_scored(score_side: String):
 			if current_attack_style == FAKE_STYLE:
 				fake_health -= 1
 				boss_hit.emit("Fake")
+				print("Boss hit")
 				if fake_health <= 0:
+					print("Phase Dead")
 					_determine_attack_style(true)
 					_change_color()
 					ai_bounce_count = 0
@@ -338,23 +413,26 @@ func _on_goal_scored(score_side: String):
 			elif current_attack_style == BULLET_STYLE:
 				bullet_health -= 1
 				boss_hit.emit("Bullet")
+				print("Boss hit")
 				if bullet_health <= 0:
+					print("Phase Dead")
 					_determine_attack_style(true)
 					_change_color()
 					ai_bounce_count = 0
 					boss_attack_status.emit(0, attack_style_color)
 			elif current_attack_style == STEALTH_STYLE:
 				stealth_health -= 1
+				print("Boss hit")
 				boss_hit.emit("Stealth")
 				if stealth_health <= 0:
+					print("Phase Dead")
 					_determine_attack_style(true)
 					_change_color()
 					ai_bounce_count = 0
 					boss_attack_status.emit(0, attack_style_color)
 					
-
 func _on_ball_dangerous():
-	ball_dangerous_throttle = GlobalConstants.BALL_DANGEROUS_THROTTLE
+	ball_dangerous_throttle = ball_dangerous_throttle_default
 
 func _on_ball_not_dangerous():
 	ball_dangerous_throttle = 1.0

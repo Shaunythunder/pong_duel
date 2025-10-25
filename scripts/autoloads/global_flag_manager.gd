@@ -1,7 +1,7 @@
 extends Node
 
 var mouse_enabled: bool = true
-var difficulty: String = "Medium"
+var difficulty: String = GlobalConstants.INSANE
 
 func disable_mouse():
 	mouse_enabled = false

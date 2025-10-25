@@ -30,6 +30,7 @@ var difficulty: String
 var player_lives: int
 var ai_lives: int
 var boss_lives: int
+var game_started: bool = false
 
 func set_difficulty_weights():
 	if difficulty == GlobalConstants.EASY:
@@ -99,7 +100,15 @@ func _ready() -> void:
 		ScoreBus.initialize_lives(player_lives, ai_lives)
 	ball.goal_scored.connect(_on_goal_scored)
 	ScoreBus.game_over.connect(_on_game_over)
-		
+	_start_game_pause()
+	
+func _start_game_pause():
+	var count_down_scene: PackedScene = load(count_down_path)
+	if count_down_scene:
+		count_down = count_down_scene.instantiate()
+		add_child(count_down)
+		count_down.set_text("Game Start")
+		get_tree().paused = true
 	
 func _on_goal_scored(side: String):
 	var timer_text: String
@@ -117,8 +126,9 @@ func _on_goal_scored(side: String):
 		if count_down_scene:
 			count_down = count_down_scene.instantiate()
 			add_child(count_down)
-		count_down.set_text(timer_text)
-	get_tree().paused = true
+			count_down.set_text(timer_text)
+			get_tree().paused = true
+
 
 func _on_boss_hit(mode: String):
 	ScoreBus.boss_hit(mode)
@@ -142,7 +152,11 @@ func _on_game_over(winner: String):
 		defeated_menu.visible = true
 	
 	get_tree().paused = true
-		
+	
+func _process(_delta: float) -> void:
+	if not game_started:
+		_start_game_pause()
+		game_started = true
 		
 			
 			

@@ -1,6 +1,7 @@
 extends Node
 
 var game_paused: bool = false
+var count_down_active: bool = false
 
 signal pause_toggle()
 
@@ -10,10 +11,11 @@ func _ready() -> void:
 	get_tree().connect("tree_changed", _on_tree_changed)
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		game_paused = not game_paused
-		get_tree().paused = game_paused
-		pause_toggle.emit()
+	if not count_down_active:
+		if event.is_action_pressed("ui_cancel"):
+			game_paused = not game_paused
+			get_tree().paused = game_paused
+			pause_toggle.emit()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _on_tree_changed() -> void:

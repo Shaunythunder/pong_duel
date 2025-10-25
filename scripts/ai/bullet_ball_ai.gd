@@ -5,8 +5,7 @@ extends CharacterBody2D
 const type: String = "paddle"
 const Y_TARGET_ZONE: float = 20.0
 const PASSIVE_THROTTLE: float = 0.3
-const ATTACK_THROTTLE: float = 0.75
-const SPECIAL_ATTACK_THRESHOLD: float = 12.0
+const SPECIAL_ATTACK_THRESHOLD: float = 8.0
 
 # ========== Variables ==========
 
@@ -24,6 +23,7 @@ const SPECIAL_ATTACK_THRESHOLD: float = 12.0
 # ---------- Variables ----------
 var ball_dangerous: float = false
 var ball_dangerous_throttle: float = 1.0
+var ball_dangerous_throttle_default: float
 
 
 var x_pos_home: float = position.x
@@ -33,6 +33,11 @@ var bounce_vector: Vector2 = Vector2.ZERO
 var ai_bounce_count: int = 0
 var direction: int = 1
 var special_attack_charge: float = ai_bounce_count / SPECIAL_ATTACK_THRESHOLD
+var difficulty: String
+
+var attack_throttle: float
+var rapid_fire_rate: int
+var rapid_fire_amount: int
 
 signal special_attack_status(special_attack_charge: float)
 
@@ -56,8 +61,9 @@ func oscillate_movement(overall_throttle: float = 1.0) -> void:
 	velocity.y = -direction * scalar_speed * overall_throttle
 
 func launch_special_attack():
-	BulletPatterns.create_straight_line_rapid_fire("Bullet Ball", self, GlobalConstants.RAPID_FIRE_RATE, GlobalConstants.RAPID_FIRE_AMOUNT, GlobalConstants.SHOT_CLEARANCE, ball)
+	BulletPatterns.create_straight_line_rapid_fire("Bullet Ball", self, rapid_fire_rate, rapid_fire_amount, GlobalConstants.SHOT_CLEARANCE, ball)
 	ai_bounce_count = 0
+	
 # ========== Conditionals  ==========
 func swap_directions_if_valid():
 	if position.y < 65:
@@ -94,9 +100,36 @@ func _is_threatened_by_ball() -> bool:
 		return true
 	return false
 	
+func set_difficulty_weights():
+	if difficulty == GlobalConstants.EASY:
+		scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_EASY
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_EASY
+		attack_throttle = GlobalConstants.ATTACK_THROTTLE_EASY
+		rapid_fire_amount = GlobalConstants.RAPID_FIRE_AMOUNT_EASY
+		rapid_fire_rate =  GlobalConstants.RAPID_FIRE_RATE_EASY
+	elif difficulty == GlobalConstants.MEDIUM:
+		scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_MEDIUM
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_MEDIUM
+		attack_throttle = GlobalConstants.ATTACK_THROTTLE_MEDIUM
+		rapid_fire_amount = GlobalConstants.RAPID_FIRE_AMOUNT_MEDIUM
+		rapid_fire_rate =  GlobalConstants.RAPID_FIRE_RATE_MEDIUM
+	elif difficulty == GlobalConstants.HARD:
+		scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_HARD
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_HARD
+		attack_throttle = GlobalConstants.ATTACK_THROTTLE_HARD
+		rapid_fire_amount = GlobalConstants.RAPID_FIRE_AMOUNT_HARD
+		rapid_fire_rate =  GlobalConstants.RAPID_FIRE_RATE_HARD
+	elif difficulty == GlobalConstants.INSANE:
+		scalar_speed = GlobalConstants.BULLET_PADDLE_SPEED_INSANE
+		ball_dangerous_throttle_default = GlobalConstants.BALL_DANGEROUS_THROTTLE_INSANE
+		attack_throttle = GlobalConstants.ATTACK_THROTTLE_INSANE
+		rapid_fire_amount = GlobalConstants.RAPID_FIRE_AMOUNT_INSANE
+		rapid_fire_rate =  GlobalConstants.RAPID_FIRE_RATE_INSANE
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	difficulty = GlobalFlagManager.difficulty
+	set_difficulty_weights()
 	ball.ball_dangerous.connect(_on_ball_dangerous)
 	ball.ball_not_dangerous.connect(_on_ball_not_dangerous)
 	ball.hit_ai_paddle.connect(_on_ball_hit_ai_paddle)
@@ -115,7 +148,7 @@ func _process(_delta: float) -> void:
 		else:
 			track_and_match_entity(ball, PASSIVE_THROTTLE)
 	else:
-		oscillate_movement(ATTACK_THROTTLE)
+		oscillate_movement(attack_throttle)
 	move_and_slide()
 	_enforce_home_x()
 
@@ -130,7 +163,7 @@ func _on_ball_hit_ai_paddle() -> void:
 	special_attack_status.emit(special_attack_charge)
 
 func _on_ball_dangerous():
-	ball_dangerous_throttle = GlobalConstants.BALL_DANGEROUS_THROTTLE
+	ball_dangerous_throttle = ball_dangerous_throttle_default
 
 func _on_ball_not_dangerous():
 	ball_dangerous_throttle = 1.0

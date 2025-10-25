@@ -3,11 +3,11 @@ extends Node
 const SAVE_PATH: String = "user://save_data.json"
 
 var save_data: Dictionary = {
-	"pong_ball_completed": false,
-	"fake_ball_completed": false,
-	"bullet_ball_completed": false,
-	"stealth_ball_completed": false,
-	"boss_ball_completed": false,
+	"pong_ball_completed": true,
+	"fake_ball_completed": true,
+	"bullet_ball_completed": true,
+	"stealth_ball_completed": true,
+	"boss_ball_completed": true,
 	"survival_highscore": 0,
  }
 

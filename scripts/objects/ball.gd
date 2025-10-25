@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 const JOSTLE_DIVIDER: int = 20
 const DEBUG_RADIANS: float = PI/2
-const BALL_ADJUST: float = PI
+const BALL_ADJUST: float = PI/64
 const PUSH_DISTANCE: int = 7
 
 # ========== Variables ==========
@@ -73,7 +73,8 @@ func handle_collision(collision, collision_obj: Node) -> void:
 			post_bounce_vector = velocity.bounce(pre_bounce_vector).normalized()
 			_push_away_after_bounce(post_bounce_vector)
 			velocity = post_bounce_vector * speed
-			_nudge_radians()
+			if type == "Real Ball":
+				_nudge_radians()
 			if wall_jostle:
 				jostle_rad_paddle_hit()
 		else:
@@ -125,17 +126,17 @@ func _calc_valid_direction() -> float:
 	return radians
 	
 func _nudge_radians() -> void:
-	var left_radians: Array = [(6 * PI)/8, (10 * PI)/8]
-	var right_radians: Array = [(-2 * PI)/8, (2 * PI)/8]
-	var radians: float = 0
-	if radians < PI and radians > right_radians[1]:
+	var radians: float = velocity.angle()
+	if radians <= PI/2 and radians >= PI/3:
 		radians -= BALL_ADJUST
-	if radians > PI and radians > left_radians[0]:
+	if radians >= PI/2 and radians >= PI*2/3:
+		radians += BALL_ADJUST
+	if radians <= PI*3/2 and radians >= PI*4/3:
 		radians -= BALL_ADJUST
-	if radians < 2 * PI and radians > left_radians[1]:
-		radians -= BALL_ADJUST
-	if radians > 0 and radians > right_radians[0]:
-		radians -= BALL_ADJUST
+	if radians >= PI*3/2 and radians >= 2 * PI:
+		radians += BALL_ADJUST
+	var scalar = velocity.length()
+	velocity = Vector2.from_angle(radians) * scalar
 	_calc_velocity()
 	
 func jostle_rad_wall_hit() -> float:
@@ -247,20 +248,20 @@ func set_difficulty_weights():
 		speed = GlobalConstants.BALL_SPEED_EASY
 		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
 	elif difficulty == GlobalConstants.MEDIUM:
-		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
-		initial_speed = GlobalConstants.BALL_SPEED_EASY
-		speed = GlobalConstants.BALL_SPEED_EASY
-		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_MEDIUM
+		initial_speed = GlobalConstants.BALL_SPEED_MEDIUM
+		speed = GlobalConstants.BALL_SPEED_MEDIUM
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_MEDIUM
 	elif difficulty == GlobalConstants.HARD:
-		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
-		initial_speed = GlobalConstants.BALL_SPEED_EASY
-		speed = GlobalConstants.BALL_SPEED_EASY
-		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_HARD
+		initial_speed = GlobalConstants.BALL_SPEED_HARD
+		speed = GlobalConstants.BALL_SPEED_HARD
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_HARD
 	elif difficulty == GlobalConstants.INSANE:
-		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_EASY
-		initial_speed = GlobalConstants.BALL_SPEED_EASY
-		speed = GlobalConstants.BALL_SPEED_EASY
-		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_EASY
+		max_speed = GlobalConstants.BALL_DANGEROUS_SPEED_INSANE
+		initial_speed = GlobalConstants.BALL_SPEED_INSANE
+		speed = GlobalConstants.BALL_SPEED_INSANE
+		ball_bounce_multiplier = GlobalConstants.BALL_BOUNCE_SPEED_MULITPLIER_INSANE
 # ========== Godot Runtime ==========
 
 # Called when the node enters the scene tree for the first time.
@@ -272,6 +273,8 @@ func _ready() -> void:
 	screen_height = screen.y
 	home_coords = Vector2(screen_width/2, screen_height/2)
 	change_color()
+	ScoreBus.update_boss_lives.connect(_on_goal_scored)
+	ScoreBus.update_lives.connect(_on_goal_scored)
 	_ball_reset()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -307,3 +310,7 @@ func _physics_process(delta: float) -> void:
 		
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, ball_radius, color)
+	
+func _on_goal_scored(_side, _no, _in:int = 20):
+	if not type == "Real Ball":
+		BallManager.return_ball_to_pool(self)
