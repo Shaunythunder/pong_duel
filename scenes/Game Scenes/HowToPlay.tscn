@@ -1,12 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2n5fng612153"]
+[gd_scene load_steps=3 format=3 uid="uid://d2n5fng612153"]
 
 [ext_resource type="Script" uid="uid://dvqdhlddiftvj" path="res://scripts/scenes/how_to_play.gd" id="1_iayqv"]
+[ext_resource type="Theme" uid="uid://ch1dm4xnq178h" path="res://Resources/Main Text.tres" id="1_sgrwe"]
 
 [node name="HowToPlay" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1280.0
 offset_bottom = 720.0
+theme = ExtResource("1_sgrwe")
 script = ExtResource("1_iayqv")
 metadata/_edit_lock_ = true
 metadata/_edit_horizontal_guides_ = [690.0, 659.0, 360.0]
@@ -32,14 +34,15 @@ text = "Return to Main Menu"
 
 [node name="Welcome" type="Label" parent="."]
 layout_mode = 0
-offset_left = 304.0
-offset_top = 128.0
-offset_right = 979.0
-offset_bottom = 593.0
+offset_left = -75.0
+offset_top = 127.0
+offset_right = 1355.0
+offset_bottom = 592.0
 text = "Welcome to Bullet Pong! The bullet hell pong game.
 
-The goal is to score on the enemy player until they run out of lives. If you run out of
-lives it's GAME OVER. Use your paddle to block the ball and stop it from going into
+The goal is to score on the enemy player 
+until they run out of lives. If you run out of lives it's GAME OVER. 
+Use your paddle to block the ball and stop it from going into
 your goal. Watch out for the different types of balls!
 
 You can control your paddle by either the mouse or the keyboard.
@@ -52,8 +55,8 @@ S: Move Down
 A (Hold): Speed Up
 D (Hold): Slow Down
 
-Click on the ball types button to see the different balls you will encounter. Each one has
-special rules."
+Click on the ball types button to see the different balls 
+you will encounter. Each one has special rules."
 horizontal_alignment = 1
 
 [connection signal="pressed" from="Bullet Types" to="." method="_on_bullet_types_pressed"]

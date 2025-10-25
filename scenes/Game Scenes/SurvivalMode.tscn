@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://1r0yugwdjnpf"]
+[gd_scene load_steps=19 format=3 uid="uid://1r0yugwdjnpf"]
 
 [ext_resource type="Script" uid="uid://cj573strn5oig" path="res://scripts/scenes/duel.gd" id="1_joui7"]
 [ext_resource type="Script" uid="uid://bhp4ojr1cwl7e" path="res://scripts/ai/boss_ai.gd" id="2_wc2f7"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://cq5uaghc3hig8" path="res://scripts/objects/ball.gd" id="7_d6emk"]
 [ext_resource type="Script" uid="uid://cu8y8ua730a00" path="res://scripts/scenes/pause_menu.gd" id="8_wc2f7"]
 [ext_resource type="Script" uid="uid://bg4wmasxbjcg3" path="res://scenes/Game Scenes/previous_high_score.gd" id="10_fqntu"]
+[ext_resource type="Theme" uid="uid://ch1dm4xnq178h" path="res://Resources/Main Text.tres" id="10_gr6wt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7xo5x"]
 size = Vector2(10, 100)
@@ -254,10 +255,11 @@ metadata/_edit_lock_ = true
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Previous High Score" type="Label" parent="CanvasLayer"]
-offset_left = 585.0
-offset_top = 35.0
-offset_right = 695.0
-offset_bottom = 58.0
+offset_left = 530.0
+offset_top = 33.0
+offset_right = 751.0
+offset_bottom = 56.0
+theme = ExtResource("10_gr6wt")
 text = "High Score: 00"
 script = ExtResource("10_fqntu")
 

@@ -25,6 +25,7 @@ GlobalPause="*res://scripts/autoloads/global_pause.gd"
 GlobalUnlocks="*res://scripts/autoloads/global_unlocks.gd"
 ScoreBus="*res://scripts/autoloads/score_bus.gd"
 GlobalFlagManager="*res://scripts/autoloads/global_flag_manager.gd"
+PersistentNodes="*res://scripts/autoloads/persistent_nodes.gd"
 
 [display]
 
@@ -74,3 +75,8 @@ pause_menu={
 
 common/physics_interpolation=true
 renderer/rendering_driver="d3d12"
+
+[rendering]
+
+gl_compatibility/driver=""
+viewport/hdr_2d=true

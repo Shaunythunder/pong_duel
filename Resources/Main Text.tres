@@ -1,0 +1,6 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://ch1dm4xnq178h"]
+
+[ext_resource type="FontFile" uid="uid://cx6iwag4qf0js" path="res://Resources/c-64.ttf" id="1_mt0ok"]
+
+[resource]
+default_font = ExtResource("1_mt0ok")

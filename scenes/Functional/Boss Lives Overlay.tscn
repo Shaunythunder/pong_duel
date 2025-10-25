@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dxtij2mt40uud"]
+[gd_scene load_steps=3 format=3 uid="uid://dxtij2mt40uud"]
 
 [ext_resource type="Script" uid="uid://crbhm8kr4bwmj" path="res://scripts/objects/boss_lives_overlay.gd" id="1_afhg3"]
-[ext_resource type="Theme" uid="uid://2edl2me4vs65" path="res://Resources/Player Score Text.tres" id="2_8vkre"]
-[ext_resource type="Theme" uid="uid://hhv2shiio6ir" path="res://Resources/Enemy Score Text.tres" id="3_4emft"]
+[ext_resource type="Theme" uid="uid://ch1dm4xnq178h" path="res://Resources/Main Text.tres" id="2_ghpql"]
 
 [node name="BossLivesOverlay" type="CanvasLayer"]
 layer = -1
@@ -12,13 +11,14 @@ metadata/_edit_vertical_guides_ = [640.0]
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 offset_right = 640.0
 offset_bottom = 720.0
+theme = ExtResource("2_ghpql")
 
 [node name="Player Score" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme = ExtResource("2_8vkre")
-theme_override_colors/font_color = Color(1, 1, 1, 0.39215687)
+theme_override_colors/font_color = Color(1, 1, 1, 0.078431375)
+theme_override_font_sizes/font_size = 64
 text = "3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -27,33 +27,35 @@ vertical_alignment = 1
 offset_left = 640.0
 offset_right = 1280.0
 offset_bottom = 720.0
+theme = ExtResource("2_ghpql")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
+theme_override_constants/separation = 101
 alignment = 1
 
 [node name="Fake Score" type="Label" parent="HBoxContainer2/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme = ExtResource("3_4emft")
 theme_override_colors/font_color = Color(0, 1, 0, 0.39215687)
+theme_override_font_sizes/font_size = 64
 text = "3"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Bullet Score" type="Label" parent="HBoxContainer2/VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("3_4emft")
 theme_override_colors/font_color = Color(1, 0, 0, 0.39215687)
+theme_override_font_sizes/font_size = 64
 text = "3"
 horizontal_alignment = 1
 
 [node name="Stealth Score" type="Label" parent="HBoxContainer2/VBoxContainer"]
 layout_mode = 2
-theme = ExtResource("3_4emft")
 theme_override_colors/font_color = Color(0, 0, 1, 0.39215687)
+theme_override_font_sizes/font_size = 64
 text = "3"
 horizontal_alignment = 1

@@ -1,77 +1,185 @@
-[gd_scene load_steps=6 format=3 uid="uid://v37ldfhngnay"]
+[gd_scene load_steps=24 format=3 uid="uid://v37ldfhngnay"]
 
 [ext_resource type="Script" uid="uid://frq7y6fpqjik" path="res://scripts/scenes/main_menu.gd" id="1_1pwfy"]
 [ext_resource type="Script" uid="uid://bew6hctsnyw0v" path="res://scenes/Game Scenes/mouse_mode.gd" id="2_53yrw"]
+[ext_resource type="Theme" uid="uid://ch1dm4xnq178h" path="res://Resources/Main Text.tres" id="2_c81dg"]
 [ext_resource type="Script" uid="uid://c0gh32tnfvsip" path="res://scenes/Game Scenes/difficulty_mode.gd" id="2_gj3xg"]
 [ext_resource type="Script" uid="uid://cdqh8whvk775k" path="res://scenes/Game Scenes/color_picker_button.gd" id="4_fa2fc"]
 [ext_resource type="Script" uid="uid://cj3aas4cnp60u" path="res://scenes/Game Scenes/best_survival_score.gd" id="5_t5got"]
 
-[node name="Main Menu" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_1pwfy")
-metadata/_edit_lock_ = true
-metadata/_edit_horizontal_guides_ = [648.0, 679.0, 40.0]
-metadata/_edit_vertical_guides_ = [1215.0, 65.0]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c81dg"]
 
-[node name="TitleHBox" type="HBoxContainer" parent="."]
-layout_mode = 0
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ikswc"]
+
+[sub_resource type="Gradient" id="Gradient_c81dg"]
+colors = PackedColorArray(1, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ikswc"]
+gradient = SubResource("Gradient_c81dg")
+width = 16
+height = 360
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5470086, 0.025641026)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kamfw"]
+particle_flag_disable_z = true
+angle_min = 1.0728835e-05
+angle_max = 360.00003
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_max = 75.0
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 4.9999976
+linear_accel_max = 4.9999976
+scale_min = 0.19999999
+scale_max = 0.19999999
+
+[sub_resource type="Gradient" id="Gradient_ikswc"]
+offsets = PackedFloat32Array(0.009302326, 0.14418605, 0.29302326, 0.66976744, 1)
+colors = PackedColorArray(0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0.9529412, 0, 0, 1, 0.7882353, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_t0oq7"]
+gradient = SubResource("Gradient_ikswc")
+width = 16
+height = 360
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5470086, 0.025641026)
+
+[sub_resource type="Gradient" id="Gradient_t0oq7"]
+offsets = PackedFloat32Array(0.009302318, 0.14418602, 0.29302323, 0.66976744, 1)
+colors = PackedColorArray(0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kamfw"]
+gradient = SubResource("Gradient_t0oq7")
+width = 16
+height = 360
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5470086, 0.025641026)
+
+[sub_resource type="Gradient" id="Gradient_kamfw"]
+offsets = PackedFloat32Array(0, 0.74883723, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.5534884, 0.5534884, 0.5534884, 0.5534884, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_5tp52"]
+gradient = SubResource("Gradient_kamfw")
+width = 16
+height = 360
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5470086, 0.025641026)
+
+[sub_resource type="SphereMesh" id="SphereMesh_t5got"]
+radius = 3.0
+height = 6.0
+
+[sub_resource type="Gradient" id="Gradient_t5got"]
+offsets = PackedFloat32Array(0, 0.07692308, 0.15384616, 0.30769232, 0.3846154, 0.46153846, 0.61538464, 0.7)
+colors = PackedColorArray(1, 1, 1, 1, 0.86, 0.86, 0.86, 1, 0.71, 0.71, 0.71, 0.80784315, 0.43, 0.43, 0.43, 0.3764706, 0.28571427, 0.28571427, 0.28571427, 0.28571427, 0.22, 0.22, 0.22, 0.14901961, 0.08, 0.08, 0.08, 0.06666667, 0, 0, 0, 0)
+metadata/_snap_enabled = true
+metadata/_snap_count = 13
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c81dg"]
+gradient = SubResource("Gradient_t5got")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_5tp52"]
+offsets = PackedFloat32Array(0, 0.5813953)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_v3eoc"]
+gradient = SubResource("Gradient_5tp52")
+width = 5
+height = 5
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_t5got"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_max = 50.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 2.0
+
+[node name="Main Menu" type="Node2D"]
+script = ExtResource("1_1pwfy")
+metadata/_edit_horizontal_guides_ = [648.0, 679.0, 40.0, 360.0]
+metadata/_edit_vertical_guides_ = [1215.0, 65.0, 640.0]
+metadata/_edit_lock_ = true
+
+[node name="Menu" type="CanvasLayer" parent="."]
+
+[node name="TitleHBox" type="HBoxContainer" parent="Menu"]
 offset_right = 1280.0
 offset_bottom = 355.0
+theme = ExtResource("2_c81dg")
 
-[node name="Title_Label" type="Label" parent="TitleHBox"]
+[node name="Title_Label" type="Label" parent="Menu/TitleHBox"]
 layout_mode = 2
 size_flags_horizontal = 6
+theme = ExtResource("2_c81dg")
+theme_override_font_sizes/font_size = 64
 text = "Bullet Pong"
 
-[node name="Button HBox" type="HBoxContainer" parent="."]
-layout_mode = 1
+[node name="Button HBox" type="HBoxContainer" parent="Menu"]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_top = -460.0
 offset_right = 1280.0
 grow_vertical = 0
+theme = ExtResource("2_c81dg")
 
-[node name="Button VBox" type="VBoxContainer" parent="Button HBox"]
+[node name="Button VBox" type="VBoxContainer" parent="Menu/Button HBox"]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
+theme_override_constants/separation = 20
 
-[node name="Pong Ball Duel Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Pong Ball Duel Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_c81dg")
 text = "Pong Ball Duel"
 
-[node name="Fake Ball Duel Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Fake Ball Duel Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "Fake Ball Duel"
 
-[node name="Bullet Duel Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Bullet Duel Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "Bullet Ball Duel"
 
-[node name="Stealth Duel Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Stealth Duel Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "Stealth Ball Duel"
 
-[node name="Boss Duel Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Boss Duel Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "Boss Duel"
 
-[node name="Survival Mode Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Survival Mode Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "Survival Mode"
 
-[node name="How to Play Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="How to Play Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "How to Play"
 
-[node name="Mouse Mode" type="OptionButton" parent="Button HBox/Button VBox"]
+[node name="Mouse Mode" type="OptionButton" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 alignment = 1
 selected = 0
 item_count = 2
@@ -81,8 +189,9 @@ popup/item_1/text = "Controller: Keyboard"
 popup/item_1/id = 1
 script = ExtResource("2_53yrw")
 
-[node name="Difficulty Mode" type="OptionButton" parent="Button HBox/Button VBox"]
+[node name="Difficulty Mode" type="OptionButton" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 alignment = 1
 selected = 1
 item_count = 4
@@ -96,28 +205,36 @@ popup/item_3/text = "Difficulty: INSANE"
 popup/item_3/id = 3
 script = ExtResource("2_gj3xg")
 
-[node name="Quit Button" type="Button" parent="Button HBox/Button VBox"]
+[node name="Quit Button" type="Button" parent="Menu/Button HBox/Button VBox"]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ikswc")
 text = "Quit Game"
 
-[node name="Reset Progress" type="Button" parent="."]
+[node name="Control" type="Control" parent="Menu"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("2_c81dg")
+
+[node name="Reset Progress" type="Button" parent="Menu/Control"]
 layout_mode = 0
-offset_left = 1091.0
+offset_left = 957.0
 offset_top = 648.0
-offset_right = 1214.0
+offset_right = 1215.0
 offset_bottom = 679.0
 text = "Reset Progress"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="."]
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Menu/Control"]
 layout_mode = 0
 offset_left = 65.0
 offset_top = 648.0
-offset_right = 171.0
+offset_right = 276.0
 offset_bottom = 679.0
 color = Color(1, 1, 1, 1)
 script = ExtResource("4_fa2fc")
 
-[node name="Player Color" type="Label" parent="."]
+[node name="Player Color" type="Label" parent="Menu/Control"]
 layout_mode = 0
 offset_left = 71.0
 offset_top = 620.0
@@ -125,32 +242,90 @@ offset_right = 165.0
 offset_bottom = 643.0
 text = "Player Color"
 
-[node name="Best Survival Score" type="Label" parent="."]
+[node name="Best Survival Score" type="Label" parent="Menu/Control"]
 layout_mode = 0
-offset_left = 1005.0
+offset_left = 794.0
 offset_top = 40.0
 offset_right = 1215.0
 offset_bottom = 63.0
 text = "Survival Mode Highcore: 10"
 script = ExtResource("5_t5got")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 598.0
-offset_top = 189.0
-offset_right = 674.0
-offset_bottom = 212.0
-text = "Ver 0.9.34"
+[node name="Background2" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+metadata/_edit_lock_ = true
 
-[connection signal="pressed" from="Button HBox/Button VBox/Pong Ball Duel Button" to="." method="_on_pong_ball_duel_button_pressed"]
-[connection signal="pressed" from="Button HBox/Button VBox/Fake Ball Duel Button" to="." method="_on_fake_ball_duel_button_pressed"]
-[connection signal="pressed" from="Button HBox/Button VBox/Bullet Duel Button" to="." method="_on_bullet_duel_button_pressed"]
-[connection signal="pressed" from="Button HBox/Button VBox/Stealth Duel Button" to="." method="_on_stealth_duel_button_pressed"]
-[connection signal="pressed" from="Button HBox/Button VBox/Boss Duel Button" to="." method="_on_boss_duel_button_pressed"]
-[connection signal="pressed" from="Button HBox/Button VBox/Survival Mode Button" to="." method="_on_survival_mode_button_pressed"]
-[connection signal="pressed" from="Button HBox/Button VBox/How to Play Button" to="." method="_on_how_to_play_button_pressed"]
-[connection signal="item_selected" from="Button HBox/Button VBox/Mouse Mode" to="." method="_on_mouse_mode_item_selected"]
-[connection signal="item_selected" from="Button HBox/Button VBox/Difficulty Mode" to="." method="_on_difficulty_mode_item_selected"]
-[connection signal="pressed" from="Button HBox/Button VBox/Quit Button" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="Reset Progress" to="." method="_on_reset_progress_pressed"]
-[connection signal="color_changed" from="ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
+[node name="CanvasModulate" type="CanvasModulate" parent="Background2"]
+color = Color(0, 0, 0, 1)
+metadata/_edit_lock_ = true
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -999
+
+[node name="Red Particles" type="GPUParticles2D" parent="Background"]
+position = Vector2(640, 360)
+amount = 50
+texture = SubResource("GradientTexture2D_ikswc")
+lifetime = 60.0
+speed_scale = 0.8
+trail_enabled = true
+trail_lifetime = 1.38
+process_material = SubResource("ParticleProcessMaterial_kamfw")
+
+[node name="Blue Particles" type="GPUParticles2D" parent="Background"]
+position = Vector2(640, 360)
+amount = 50
+texture = SubResource("GradientTexture2D_t0oq7")
+lifetime = 60.0
+speed_scale = 0.8
+trail_enabled = true
+trail_lifetime = 1.38
+process_material = SubResource("ParticleProcessMaterial_kamfw")
+
+[node name="Green Particles" type="GPUParticles2D" parent="Background"]
+position = Vector2(640, 360)
+amount = 50
+texture = SubResource("GradientTexture2D_kamfw")
+lifetime = 60.0
+speed_scale = 0.8
+trail_enabled = true
+trail_lifetime = 1.38
+process_material = SubResource("ParticleProcessMaterial_kamfw")
+
+[node name="White Particles" type="GPUParticles2D" parent="Background"]
+position = Vector2(640, 360)
+amount = 50
+texture = SubResource("GradientTexture2D_5tp52")
+lifetime = 60.0
+speed_scale = 0.8
+trail_enabled = true
+trail_lifetime = 1.38
+process_material = SubResource("ParticleProcessMaterial_kamfw")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Background"]
+position = Vector2(640, 360)
+mesh = SubResource("SphereMesh_t5got")
+
+[node name="PointLight2D" type="PointLight2D" parent="Background/MeshInstance2D"]
+texture = SubResource("GradientTexture2D_c81dg")
+
+[node name="Stars" type="GPUParticles2D" parent="Background"]
+position = Vector2(640, 360)
+amount = 500
+texture = SubResource("GradientTexture2D_v3eoc")
+lifetime = 300.0
+process_material = SubResource("ParticleProcessMaterial_t5got")
+
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Pong Ball Duel Button" to="." method="_on_pong_ball_duel_button_pressed"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Fake Ball Duel Button" to="." method="_on_fake_ball_duel_button_pressed"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Bullet Duel Button" to="." method="_on_bullet_duel_button_pressed"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Stealth Duel Button" to="." method="_on_stealth_duel_button_pressed"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Boss Duel Button" to="." method="_on_boss_duel_button_pressed"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Survival Mode Button" to="." method="_on_survival_mode_button_pressed"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/How to Play Button" to="." method="_on_how_to_play_button_pressed"]
+[connection signal="item_selected" from="Menu/Button HBox/Button VBox/Mouse Mode" to="." method="_on_mouse_mode_item_selected"]
+[connection signal="item_selected" from="Menu/Button HBox/Button VBox/Difficulty Mode" to="." method="_on_difficulty_mode_item_selected"]
+[connection signal="pressed" from="Menu/Button HBox/Button VBox/Quit Button" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Menu/Control/Reset Progress" to="." method="_on_reset_progress_pressed"]
+[connection signal="color_changed" from="Menu/Control/ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]

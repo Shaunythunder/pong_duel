@@ -1,8 +1,9 @@
 [gd_scene load_steps=4 format=3 uid="uid://cr4w2j0ihdxa2"]
 
 [ext_resource type="Script" uid="uid://h1okvg5gyipw" path="res://scripts/objects/lives_overlay.gd" id="1_fr66g"]
-[ext_resource type="Theme" uid="uid://2edl2me4vs65" path="res://Resources/Player Score Text.tres" id="2_ntel1"]
-[ext_resource type="Theme" uid="uid://hhv2shiio6ir" path="res://Resources/Enemy Score Text.tres" id="3_t5bit"]
+[ext_resource type="Theme" uid="uid://ch1dm4xnq178h" path="res://Resources/Main Text.tres" id="2_t5bit"]
+
+[sub_resource type="Theme" id="Theme_f160i"]
 
 [node name="LivesOverlay" type="CanvasLayer"]
 layer = 0
@@ -11,13 +12,15 @@ script = ExtResource("1_fr66g")
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 offset_right = 1280.0
 offset_bottom = 720.0
+theme = ExtResource("2_t5bit")
 
 [node name="Player Score" type="Label" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme = ExtResource("2_ntel1")
-theme_override_colors/font_color = Color(1, 1, 1, 0.39215687)
+theme = ExtResource("2_t5bit")
+theme_override_colors/font_color = Color(1, 1, 1, 0.078431375)
+theme_override_font_sizes/font_size = 64
 text = "3"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -26,8 +29,9 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-theme = ExtResource("3_t5bit")
-theme_override_colors/font_color = Color(1, 1, 1, 0.39215687)
+theme = SubResource("Theme_f160i")
+theme_override_colors/font_color = Color(1, 1, 1, 0.078431375)
+theme_override_font_sizes/font_size = 64
 text = "30"
 horizontal_alignment = 1
 vertical_alignment = 1
