@@ -16,7 +16,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 theme = ExtResource("1_clrpu")
 script = ExtResource("1_fgjm6")
-metadata/_edit_vertical_guides_ = [1235.0, 100.0, 130.0, 640.0]
+metadata/_edit_vertical_guides_ = [1235.0, 100.0, 130.0, 640.0, 1127.0]
 metadata/_edit_horizontal_guides_ = [372.0, 659.0]
 metadata/_edit_lock_ = true
 
@@ -38,6 +38,7 @@ position = Vector2(1235, 222)
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("2_clrpu")
+max_speed = 1800.0
 color_change_on_speed = false
 change_color_near_shooter = true
 paddle_no_clip = true
@@ -60,7 +61,7 @@ position = Vector2(1235, 522)
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("2_clrpu")
-default_color = Color(0, 0, 1, 1)
+default_color = Color(0.72833306, 0, 0.95, 1)
 stealthy = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Projectiles/Stealth Ball"]
@@ -182,12 +183,12 @@ text = "Return to Main Menu"
 
 [node name="Pause Balls" type="Button" parent="."]
 layout_mode = 0
-offset_left = 592.0
-offset_top = 659.0
-offset_right = 688.0
-offset_bottom = 690.0
+offset_left = 935.0
+offset_top = 23.0
+offset_right = 1127.0
+offset_bottom = 54.0
 toggle_mode = true
-text = "Pause Balls"
+text = "Freeze Balls"
 
 [connection signal="pressed" from="How to Play2" to="." method="_on_how_to_play_2_pressed"]
 [connection signal="pressed" from="Back to Main Menu" to="." method="_on_back_to_main_menu_pressed"]

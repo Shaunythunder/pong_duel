@@ -8,6 +8,9 @@ var global_flags: Dictionary = {
 	"player_color": Color.WHITE
 }
 
+var how_to_play_visited: bool = false
+var in_game: bool = false
+
 func save_data_to_json() -> void:
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if not file:

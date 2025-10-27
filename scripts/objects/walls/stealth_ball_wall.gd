@@ -13,7 +13,7 @@ func _on_attack_ended() -> void:
 	color = default_color
 	
 func _on_special_attack_status(special_attack_charge) -> void:
-	var color_target = Color.WHITE.lerp(Color.BLUE, special_attack_charge)
+	var color_target = Color.WHITE.lerp(Color.DARK_VIOLET, special_attack_charge)
 	
 	color_tween = create_tween()
 	color_tween.tween_property(self, "modulate", color_target, 0.2)

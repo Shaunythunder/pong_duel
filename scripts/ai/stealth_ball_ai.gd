@@ -82,6 +82,7 @@ func oscillate_movement(overall_throttle: float = 1.0) -> void:
 	velocity.y = -direction * scalar_speed * overall_throttle
 
 func launch_special_attack():
+		Soundstreamplayer.play_stealth_attack_sound()
 		var ball_spawn_position_x = position.x - GlobalConstants.SHOT_CLEARANCE
 		var ball_spawn_position_y = position.y
 		var ball_spawn_position = Vector2(ball_spawn_position_x, ball_spawn_position_y)

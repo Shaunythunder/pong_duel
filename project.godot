@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="Pong Duel"
+config/name="Bullet Pong"
 run/main_scene="uid://v37ldfhngnay"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://rlwixsw0f1p8"
 
 [autoload]
 
@@ -26,6 +26,8 @@ GlobalUnlocks="*res://scripts/autoloads/global_unlocks.gd"
 ScoreBus="*res://scripts/autoloads/score_bus.gd"
 GlobalFlagManager="*res://scripts/autoloads/global_flag_manager.gd"
 PersistentNodes="*res://scripts/autoloads/persistent_nodes.gd"
+Audiostreamplayer="*res://scripts/autoloads/audiostreamplayer.gd"
+Soundstreamplayer="*res://scripts/autoloads/soundstreamplayer.gd"
 
 [display]
 

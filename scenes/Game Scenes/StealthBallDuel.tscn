@@ -58,7 +58,7 @@ offset_right = 5.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 1.2416085, 1)
+color = Color(0.72833306, 0, 0.95, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="Player Paddle (Left)" type="CharacterBody2D" parent="Paddles"]

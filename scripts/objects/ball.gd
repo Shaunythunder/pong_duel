@@ -79,6 +79,7 @@ func handle_collision(collision, collision_obj: Node) -> void:
 				jostle_rad_paddle_hit()
 		else:
 			if score_on_goal:
+				Soundstreamplayer.play_goal_sound()
 				goal_scored.emit(collision_obj.side)
 			if not terminate_on_goal:
 				_ball_reset()
@@ -305,6 +306,8 @@ func _physics_process(delta: float) -> void:
 	var delta_velocity: Vector2 = velocity * delta
 	var collision = move_and_collide(delta_velocity)
 	if collision:
+		if type == "Real Ball":
+			Soundstreamplayer.play_pong_ball_bounce_sound()
 		var collision_obj = collision.get_collider()
 		handle_collision(collision, collision_obj)
 	_is_ball_dangerous()

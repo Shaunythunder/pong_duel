@@ -54,6 +54,7 @@ func track_and_match_entity(entity: CharacterBody2D, overall_throttle: float = 1
 	
 	
 func launch_special_attack():
+	Soundstreamplayer.play_fake_attack_sound()
 	var ball_spawn_pos_x: float = position.x - GlobalConstants.SHOT_CLEARANCE
 	var ball_spawn_pos_y: float = position.y
 	var ball_spawn_position: Vector2 = Vector2(ball_spawn_pos_x, ball_spawn_pos_y)

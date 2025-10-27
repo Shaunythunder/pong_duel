@@ -58,6 +58,7 @@ func create_straight_line_rapid_fire(ball_type: String, shooter, rate_of_fire: f
 		while get_tree().paused:
 			await get_tree().process_frame
 		if is_instance_valid(shooter):
+			Soundstreamplayer.play_bullet_attack_sound()
 			var ball_spawn_position_x = shooter.position.x - clearance
 			var ball_spawn_position_y = shooter.position.y
 			ball_spawn_position = Vector2(ball_spawn_position_x, ball_spawn_position_y)

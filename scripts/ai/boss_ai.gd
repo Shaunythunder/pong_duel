@@ -20,7 +20,7 @@ const STEALTH_STYLE: String = "Stealth Ball"
 
 const FAKE_COLOR: Color = Color.GREEN
 const BULLET_COLOR: Color = Color.RED
-const STEALTH_COLOR: Color = Color.BLUE
+const STEALTH_COLOR: Color = Color.MAGENTA
 
 
 # ========== Variables ==========
@@ -106,6 +106,7 @@ func launch_special_attack():
 	var ball_spawn_position = Vector2(ball_spawn_position_x, ball_spawn_position_y)
 
 	if current_attack_style == FAKE_STYLE:
+		Soundstreamplayer.play_fake_attack_sound()
 		BulletPatterns.create_burst_pattern(
 			"Fake Ball", 
 			ball_spawn_position, 
@@ -124,6 +125,7 @@ func launch_special_attack():
 			)
 
 	elif current_attack_style == STEALTH_STYLE:
+		Soundstreamplayer.play_stealth_attack_sound()
 		BallManager.get_ball_from_pool(
 			"Stealth Ball", 
 			ball_spawn_position, 

@@ -32,6 +32,12 @@ func buttons_visible_by_difficulty(current_difficulty):
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if not GlobalFlagManager.how_to_play_visited:
+		Audiostreamplayer.play_main_menu()
+	else:
+		GlobalFlagManager.how_to_play_visited = false
+	GlobalFlagManager.in_game = false
+	
 	background.reparent(PersistentNodes)
 	background_sim.reparent(PersistentNodes)
 	background_sim.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -70,7 +76,7 @@ func _on_survival_mode_button_pressed() -> void:
 
 
 func _on_how_to_play_button_pressed() -> void:
-
+	GlobalFlagManager.how_to_play_visited = true
 	get_tree().change_scene_to_file("res://scenes/Game Scenes/HowToPlay.tscn")
 
 
@@ -79,6 +85,7 @@ func _on_quit_button_pressed() -> void:
 
 
 func _on_reset_progress_pressed() -> void:
+	GlobalFlagManager.how_to_play_visited = true
 	GlobalUnlocks.reset_progress()
 	get_tree().reload_current_scene()
 

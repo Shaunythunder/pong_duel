@@ -53,6 +53,13 @@ func set_difficulty_weights():
 		boss_lives = GlobalConstants.BOSS_LIVES_INSANE
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if not GlobalFlagManager.in_game:
+		if level == "Boss Ball" or level == "Survival Mode":
+			Audiostreamplayer.play_boss_music()
+		else:
+			Audiostreamplayer.play_game_music()
+	GlobalFlagManager.in_game = true
+	
 	difficulty = GlobalFlagManager.global_flags["difficulty"]
 	set_difficulty_weights()
 	BallManager.clear_pools()
@@ -142,11 +149,13 @@ func _on_boss_hit(mode: String):
 		
 func _on_game_over(winner: String):
 	if level == "Survival Mode":
+		Soundstreamplayer.play_victory_sound()
 		if ScoreBus.get_player_score() > GlobalUnlocks.save_data[GlobalFlagManager.difficulty]["survival_highscore"]:
 			GlobalUnlocks.save_data[GlobalFlagManager.difficulty]["survival_highscore"] = ScoreBus.get_player_score()
 		GlobalUnlocks.save_data_to_json()
 		survival_score_menu.visible = true
 	elif winner == "Player":
+		Soundstreamplayer.play_victory_sound()
 		victory_menu.visible = true
 		if level == "Pong Ball":
 			GlobalUnlocks.save_data[difficulty]["pong_ball_completed"] = true
@@ -160,6 +169,7 @@ func _on_game_over(winner: String):
 			GlobalUnlocks.save_data[difficulty]["boss_ball_completed"] = true
 		GlobalUnlocks.save_data_to_json()
 	elif winner == "AI":
+		Soundstreamplayer.play_game_over_sound()
 		defeated_menu.visible = true
 		
 	get_tree().paused = true
